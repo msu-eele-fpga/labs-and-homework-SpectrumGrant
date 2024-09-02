@@ -91,6 +91,8 @@ end entity DE10_Top_Level;
 architecture DE10Nano_arch of DE10_Top_Level is
 
 begin
+	LED(3 downto 0) <= SW;
+	LED(7 downto 4) <= "0000";
 	
 -- Add VDHL code to connect the four switches (SW) to four LEDs
 
