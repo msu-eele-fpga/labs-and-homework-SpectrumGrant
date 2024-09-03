@@ -2,7 +2,7 @@
 
 # Big Heading
 
-A ~~d~~__i__f_<sub>f</sub>***i***<sup>c</sup>u*l*t to read sentence
+A ~~d~~**i**_f_<sub>f</sub>***i***<sup>c</sup>u*l*t to read sentence
 
 ## Less-Big Heading
 
