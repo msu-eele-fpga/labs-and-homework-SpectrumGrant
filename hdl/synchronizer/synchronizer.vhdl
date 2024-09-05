@@ -1,3 +1,11 @@
+----------------------------------------------------------------------------
+-- Description:  Asynchronos signal synchronizer, behaving as two sequential d-flip-flops
+----------------------------------------------------------------------------
+-- Author:       Grant Kirkland
+-- Company:      Montana State University
+-- Create Date:  September 4, 2024
+-- Revision:     1.0
+----------------------------------------------------------------------------
 
 
 
@@ -8,5 +16,20 @@ entity synchronizer is
 		sync	: out	std_ulogic
 	);
 	
+end entity synchronizer;
+
+architecture synchronizer_arch of synchronizer is
+
+	signal not_sync_yet : std_logic;
 	
+begin 
+	Synchronize : process(clk)
+	begin
+		if (rising_edge(clk)) then
+			not_sync_yet <= async;
+			sync <= not_sync_yet;
+		end if;
+	end process;
+	
+end architecture;
 	
