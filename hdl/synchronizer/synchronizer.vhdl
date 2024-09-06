@@ -7,6 +7,8 @@
 -- Revision:     1.0
 ----------------------------------------------------------------------------
 
+library ieee;
+use ieee.std_logic_1164.all;
 
 
 entity synchronizer is
