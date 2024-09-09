@@ -1,4 +1,4 @@
--- Copyright 2106 Ricardo Jasinski
+-- Copyright 2016 Ricardo Jasinski
 -- from the book Effective Coding with VHDL by Ricardo Jasinski
 -- Copyright 2024 Trevor Vannoy
 -- SPDX-License-Identifier: CC0-1.0
