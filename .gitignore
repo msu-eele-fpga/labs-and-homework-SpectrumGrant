@@ -104,6 +104,6 @@ quartus/**/simulation/
 vsim.wlf
 *.cr.mti
 work/
-
+transcript
 
 
