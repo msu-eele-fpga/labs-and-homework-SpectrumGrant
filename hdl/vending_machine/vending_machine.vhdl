@@ -30,7 +30,7 @@ Signal	current_state, next_state : State_Type;
 begin
 	state_memory : process(clk, rst)
 	begin
-		if (rst = '0') then
+		if (rst = '1') then
 			current_state <= Cents0;
 		elsif (rising_edge(clk)) then
 			current_state <= next_state;
@@ -48,6 +48,24 @@ begin
 				else
 					next_state <= Cents0;
 				end if;
+			when Cents5 =>
+				if (dime = '1') then
+					next_state <= Cents15;
+				elsif (nickel = '1') then
+					next_state <= Cents10;
+				else
+					next_state <= Cents5;
+				end if;
+			when Cents10 =>
+				if (dime = '1') then
+					next_state <= Cents15;
+				elsif (nickel = '1') then
+					next_state <= Cents15;
+				else
+					next_state <= Cents10;
+				end if;
+			when	Cents15 =>
+				next_state <= Cents0;
 			when others =>
 				null;
 		end case;
