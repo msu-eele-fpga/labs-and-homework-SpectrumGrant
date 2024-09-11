@@ -1,22 +1,260 @@
-vsim work.synchronizer_tb
-# vsim work.synchronizer_tb 
-# Start time: 22:10:39 on Sep 05,2024
-# ** Note: (vsim-8009) Loading existing optimized design _opt
+# Compile of synchronizer.vhdl was successful.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl was successful.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl was successful.
+# Compile of timed_counter.vhdl failed with 2 errors.
+# Compile of timed_counter.vhdl failed with 1 errors.
+# Compile of timed_counter.vhdl was successful.
+# Compile of timed_counter.vhdl failed with 2 errors.
+# Compile of timed_counter.vhdl failed with 3 errors.
+# Compile of timed_counter.vhdl was successful.
+# Compile of timed_counter.vhdl failed with 2 errors.
+# Compile of timed_counter.vhdl was successful.
+# Compile of tb_pkg.vhdl failed with 1 errors.
+# Compile of tb_pkg.vhdl was successful.
+# Compile of timed_counter_tb.vhdl failed with 6 errors.
+# Compile of timed_counter_tb.vhdl failed with 6 errors.
+# Compile of synchronizer_tb.vhd was successful.
+# Compile of synchronizer.vhdl was successful.
+# Compile of timed_counter.vhdl was successful.
+# Compile of tb_pkg.vhdl was successful.
+# Compile of assert_pkg.vhd failed with 31 errors.
+# Compile of print_pkg.vhd failed with 3 errors.
+# Compile of timed_counter_tb.vhdl failed with 3 errors.
+# 7 compiles, 3 failed with 37 errors.
+# Compile of synchronizer_tb.vhd was successful.
+# Compile of synchronizer.vhdl was successful.
+# Compile of timed_counter.vhdl was successful.
+# Compile of tb_pkg.vhdl was successful.
+# Compile of assert_pkg.vhd was successful.
+# Compile of print_pkg.vhd was successful.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# 7 compiles, 1 failed with 1 error.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# Compile of timed_counter_tb.vhdl was successful with warnings.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# Compile of synchronizer_tb.vhd was successful.
+# Compile of synchronizer.vhdl was successful.
+# Compile of timed_counter.vhdl was successful.
+# Compile of tb_pkg.vhdl was successful.
+# Compile of assert_pkg.vhd was successful.
+# Compile of print_pkg.vhd was successful.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# 7 compiles, 1 failed with 1 error.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# Compile of timed_counter_tb.vhdl failed with 1 errors.
+# Compile of timed_counter_tb.vhdl was successful with warnings.
+vsim work.timed_counter_tb
+# vsim work.timed_counter_tb 
+# Start time: 11:03:09 on Sep 11,2024
+# ** Note: (vsim-3812) Design is being optimized...
 # Loading std.standard
 # Loading std.textio(body)
 # Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.print_pkg(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.float_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading ieee.float_pkg
+# Loading work.assert_pkg(body)
+# Loading work.tb_pkg(body)
 # Loading std.env(body)
-# Loading work.synchronizer_tb(testbench)#1
-add wave  \
-sim:/synchronizer_tb/clk_tb \
-sim:/synchronizer_tb/async_tb \
-sim:/synchronizer_tb/sync_tb \
-sim:/synchronizer_tb/sync_expected \
-sim:/synchronizer_tb/CLK_PERIOD
-run -all
-# ** Note: all tests passed!
-#    Time: 100 ns  Iteration: 0  Instance: /synchronizer_tb
+# Loading work.timed_counter_tb(testbench)#1
+add wave sim:/timed_counter_tb/*
+run
+# testing 100 ns timer: enabled
+run
 # 1
-# Break in Process check_output at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/synchronizer/synchronizer_tb.vhd line 111
-# End time: 22:16:27 on Sep 05,2024, Elapsed time: 0:05:48
-# Errors: 0, Warnings: 1
+# Break in Process stimuli_and_checker at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/timed-counter/timed_counter_tb.vhdl line 87
+run
+# testing 100 ns timer: enabled
+add wave -position insertpoint sim:/timed_counter_tb/dut_100ns_counter/Counter/*
+# (vish-4014) No objects found matching 'sim:/timed_counter_tb/dut_100ns_counter/Counter/*'.
+# Compile of synchronizer_tb.vhd was successful.
+# Compile of synchronizer.vhdl was successful.
+# Compile of timed_counter.vhdl was successful.
+# Compile of tb_pkg.vhdl was successful.
+# Compile of assert_pkg.vhd was successful.
+# Compile of print_pkg.vhd was successful.
+# Compile of timed_counter_tb.vhdl was successful with warnings.
+# 7 compiles, 0 failed with no errors.
+# Compile of timed_counter.vhdl was successful.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.print_pkg(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.float_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading ieee.float_pkg
+# Loading work.assert_pkg(body)
+# Loading work.tb_pkg(body)
+# Loading std.env(body)
+# Loading work.timed_counter_tb(testbench)#1
+run
+# testing 100 ns timer: enabled
+run
+# ** Failure: error in test case 'counter not done'
+#    Time: 111 ns  Iteration: 0  Process: /timed_counter_tb/stimuli_and_checker File: C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd
+# Break in Subprogram assert_that at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd line 63
+run
+# ** Failure: error in test case 'counter is done'
+#    Time: 131 ns  Iteration: 0  Process: /timed_counter_tb/stimuli_and_checker File: C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd
+# Break in Subprogram assert_that at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd line 63
+run
+# 1
+# Break in Process stimuli_and_checker at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/timed-counter/timed_counter_tb.vhdl line 87
+run
+# testing 100 ns timer: enabled
+# ** Failure: error in test case 'counter not done'
+#    Time: 211 ns  Iteration: 0  Process: /timed_counter_tb/stimuli_and_checker File: C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd
+# Break in Subprogram assert_that at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd line 63
+# Compile of timed_counter_tb.vhdl was successful with warnings.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.print_pkg(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.float_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading ieee.float_pkg
+# Loading work.assert_pkg(body)
+# Loading work.tb_pkg(body)
+# Loading std.env(body)
+# Loading work.timed_counter_tb(testbench)#1
+run
+# testing 100 ns timer: enabled
+run
+# ** Failure: error in test case 'counter not done'
+#    Time: 111 ns  Iteration: 0  Process: /timed_counter_tb/stimuli_and_checker File: C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd
+# Break in Subprogram assert_that at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd line 63
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-8009) Loading existing optimized design _opt1
+run
+# testing 100 ns timer: enabled
+run
+# ** Failure: error in test case 'counter not done'
+#    Time: 111 ns  Iteration: 0  Process: /timed_counter_tb/stimuli_and_checker File: C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd
+# Break in Subprogram assert_that at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/common/assert_pkg.vhd line 63
+# Compile of timed_counter.vhdl was successful.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.print_pkg(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.float_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading ieee.float_pkg
+# Loading work.assert_pkg(body)
+# Loading work.tb_pkg(body)
+# Loading std.env(body)
+# Loading work.timed_counter_tb(testbench)#1
+run
+# testing 100 ns timer: enabled
+run
+# testing 100 ns timer: disabled
+run
+run
+# testing 100 ns timer multiple: enabled
+run
+run
+run
+restart
+# ** Note: (vsim-8009) Loading existing optimized design _opt1
+run
+# testing 100 ns timer: enabled
+# testing 100 ns timer: disabled
+# testing 100 ns timer multiple: enabled
+# 1
+# Break in Process stimuli_and_checker at C:/Users/Grant.GRANTSPC/Documents/LucasWasHere/Shared/labs-and-homework-SpectrumGrant/sim/timed-counter/timed_counter_tb.vhdl line 111
+# Compile of timed_counter_tb.vhdl was successful with warnings.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.print_pkg(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.float_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading ieee.float_pkg
+# Loading work.assert_pkg(body)
+# Loading work.tb_pkg(body)
+# Loading std.env(body)
+# Loading work.timed_counter_tb(testbench)#1
+run
+# testing 100 ns timer: enabled
+# testing 100 ns timer: disabled
+# testing 100 ns timer multiple: enabled
+# testing 40 ns timer: enabled
+# testing 40 ns timer: disabled
+run
+# testing 40 ns timer multiple: enabled
+add wave -position insertpoint  \
+sim:/timed_counter_tb/enable_40ns_tb
+add wave -position insertpoint  \
+sim:/timed_counter_tb/done_40ns_tb
+# Compile of timed_counter_tb.vhdl was successful with warnings.
+restart
+# ** Note: (vsim-12125) Error and warning message counts have been reset to '0' because of 'restart'.
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.print_pkg(body)
+# Loading ieee.fixed_float_types
+# Loading ieee.math_real(body)
+# Loading ieee.fixed_generic_pkg(body)
+# Loading ieee.float_generic_pkg(body)
+# Loading ieee.fixed_pkg
+# Loading ieee.float_pkg
+# Loading work.assert_pkg(body)
+# Loading work.tb_pkg(body)
+# Loading std.env(body)
+# Loading work.timed_counter_tb(testbench)#1
+run
+# testing 100 ns timer: enabled
+# testing 100 ns timer: disabled
+# testing 100 ns timer multiple: enabled
+# testing 40 ns timer: enabled
+# testing 40 ns timer: disabled
+# testing 40 ns timer multiple: enabled
+run
+run
