@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
--- Description:  
+-- Description:  Timed Counter component, when enabled counts for set time before outputting high for one clock cycle. If disabled outputs low.
 ----------------------------------------------------------------------------
 -- Author:       Grant Kirkland
 -- Company:      Montana State University
