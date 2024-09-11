@@ -48,8 +48,11 @@
 	
 	signal enable_100ns_tb	: boolean := false;
 	signal done_100ns_tb		: boolean;
+	signal enable_40ns_tb	: boolean := false;
+	signal done_40ns_tb		: boolean;
 	
 	constant HUNDRED_NS		: time := 100 ns;
+	constant FOURTY_NS		: time := 40 ns;
 	
  begin
  
@@ -62,6 +65,17 @@
 			clk		=> clk_tb,
 			enable	=> enable_100ns_tb,
 			done		=> done_100ns_tb
+		);
+		
+	dut_40ns_counter : component timed_counter
+		generic map (
+			clk_period => CLK_PERIOD,
+			count_time => FOURTY_NS
+		)
+		port map (
+			clk		=> clk_tb,
+			enable	=> enable_40ns_tb,
+			done		=> done_40ns_tb
 		);
 	
 	clk_tb <= not clk_tb after CLK_PERIOD / 2;
@@ -105,7 +119,42 @@
 			end loop;
 		end loop;
 		
-		-- add other test cases here
+		enable_100ns_tb <= false;
+		-- test 100ns timer when it's enabled
+		print("testing 40 ns timer: enabled");
+		wait_for_clock_edge(clk_tb);
+		enable_40ns_tb <= true;
+
+		-- loop for the number of clock cycles that is equal to the timer's period
+		for i in 0 to (FOURTY_NS / CLK_PERIOD) loop
+			wait_for_clock_edge(clk_tb);
+			-- test whether the counter's done output is correct or not
+			predict_counter_done(FOURTY_NS, enable_40ns_tb, done_40ns_tb, i);
+		end loop;
+		
+		print("testing 40 ns timer: disabled");
+		wait_for_clock_edge(clk_tb);
+		enable_40ns_tb <= false;
+
+		-- loop for the number of clock cycles that is equal to the timer's period
+		for i in 0 to (FOURTY_NS / CLK_PERIOD * 2) loop
+			wait_for_clock_edge(clk_tb);
+			-- test whether the counter's done output is correct or not
+			predict_counter_done(FOURTY_NS, enable_40ns_tb, done_40ns_tb, i);
+		end loop;
+
+		print("testing 40 ns timer multiple: enabled");
+		wait_for_clock_edge(clk_tb);
+		enable_40ns_tb <= true;
+
+		-- loop for the number of clock cycles that is equal to the timer's period
+		for j in 0 to 3 loop
+			for i in 0 to (FOURTY_NS / CLK_PERIOD) loop
+				wait_for_clock_edge(clk_tb);
+				-- test whether the counter's done output is correct or not
+				predict_counter_done(FOURTY_NS, enable_40ns_tb, done_40ns_tb, i);
+			end loop;
+		end loop;
 		
 		-- testbench is done :)
 		std.env.finish;
