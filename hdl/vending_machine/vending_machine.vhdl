@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
--- Description:  
+-- Description:  A vending machine based state machine that takes in coins and outputs a dispense signal when the correct amount has been input.
 ----------------------------------------------------------------------------
 -- Author:       Grant Kirkland
 -- Company:      Montana State University
