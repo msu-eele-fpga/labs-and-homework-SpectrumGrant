@@ -29,7 +29,7 @@ architecture async_conditioner_arch of async_conditioner is
 	component debouncer
 		generic(
 			clk_period		: time := 20 ns;
-			debounce_time	: time := 100 ms;
+			debounce_time	: time := 100 ms
 		);
 		port (
 			clk				: in	std_logic;
