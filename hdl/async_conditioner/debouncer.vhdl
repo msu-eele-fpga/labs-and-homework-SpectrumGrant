@@ -63,8 +63,4 @@ begin
 
 	debounced <= hold_value;
 
-	output_logic: process(current_state)
-	begin
-	end process output_logic;
-
 end architecture debouncer_arch;
