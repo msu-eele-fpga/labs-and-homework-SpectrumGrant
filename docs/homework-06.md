@@ -2,7 +2,7 @@
 
 ## Overview
 
-This assignment had a state machine being made, with a clock and reset input, and two coin type inputs. Based on which coin was inserted the system tracked how much money was inserted until 15 or more cents were added at which point it would output a dispense signal.
+This assignment involved three seperate files being made. The first was a debouncer, which would take an input and wait a set amount of time before tracking changes to the input again after a toggle. The second was a one pulse module, it takes inputs of varied length and outputs a single pulse with a duration equal to a clock cycle. The third was an async conditioner which implemented these two components as well as the previously made synchronizer.
 
 ## Deliverables
 
