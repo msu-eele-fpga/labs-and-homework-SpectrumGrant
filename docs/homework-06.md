@@ -7,9 +7,11 @@ This assignment had a state machine being made, with a clock and reset input, an
 ## Deliverables
 
 ### Debouncer
-![A screenshot of a awesome working program](assets/Kirkland_Homework06_Waveform.png)
-![A screenshot of a awesome working program](assets/Kirkland_Homework06_Transcript.png)
+![A screenshot of a awesome working program](assets/Kirkland_Homework06_Debouncer_Waveform.png)
+![A screenshot of a awesome working program](assets/Kirkland_Homework06_Debouncer_Transcript.png)
 
 ### One Pulse
+![A screenshot of a awesome working program](assets/Kirkland_Homework06_Onepulse_Waveform.png)
 
 ### Async Conditioner
+![A screenshot of a awesome working program](assets/Kirkland_Homework06_Conditioner_Waveform.png)
