@@ -26,6 +26,8 @@ architecture async_conditioner_tb_arch of async_conditioner_tb is
 	signal async_tb	: std_ulogic := '0';
 	signal sync_tb		: std_ulogic := '0';
 
+	signal hold_track	: std_ulogic := '0';
+
 begin
 	clk_tb <= not clk_tb after CLK_PERIOD / 2;
 	
@@ -54,7 +56,25 @@ begin
 		std.env.finish;
 	end process stimuli_generator;
 
+	hold_time : process is
+	begin
+		if (sync_tb = '1') then
+			hold_track <= '1';
+			wait for 100 ms;
+			hold_track <= '0';
+		end if;
+	end process;
+	
+	
 	response_checker : process is
+	begin
+		if (rising_edge(clk_tb) and async_tb = '1') then
+			wait_for_clock_edge(clk_tb);
+			assert_eq(sync_tb, '1', "clock cycle after high");
+			wait_for_clock_edge(clk_tb);
+			assert_eq(sync_tb, '0', "sync low after high");
+			wait for 100 ms;
+		end if;
 	
 	end process;
 	
