@@ -7,22 +7,55 @@
 -- Revision:     1.0
 ----------------------------------------------------------------------------
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.math_real.all;
+use ieee.numeric_std.all;
 
 entity led_patterns is
 	generic (
 		system_clock_period : time := 20 ns
 	);
 	port (
-		clk					: in	std_ulogic;
-		rst					: in	std_ulogic;
+		clk					: in std_ulogic;
+		rst					: in std_ulogic;
 		push_button 		: in std_ulogic;
-		switches				: in	std_logic;
+		switches				: in std_ulogic_vector(3 downto 0);
 		hps_led_control	: in boolean;
 		base_period 		: in unsigned(7 downto 0);
 		led_reg				: in std_ulogic_vector(7 downto 0);
 		led					: out	std_ulogic_vector(7 downto 0)
 	);
 end entity;
+
+architecture led_patterns_arch of led_patterns is 
+	type state_type is (switch_display, pattern_00, pattern_01, pattern_02, pattern_03, pattern_04);
+	signal current_state : state_type;
+	signal next_state : state_type;
+	constant wait_time : time := 1000 ms;
+	constant wait_count : integer := wait_time / system_clock_period;
+	
+begin
+
+	
+	
+	next_state_logic: process(push_button, rst)
+	begin
+		if (rst = '1') then
+			current_state <= switch_display;
+		end if;
+		
+	end process next_state_logic;
+	
+
+
+	state_logic: process(clk, rst)
+	begin
+	end process state_logic;
+
+	output_logic: process(current_state)
+	begin
+	end process output_logic;
+
+end architecture;
 
