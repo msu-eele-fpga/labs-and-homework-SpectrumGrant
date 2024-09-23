@@ -34,6 +34,8 @@ architecture led_patterns_arch of led_patterns is
 	signal next_state : state_type;
 	constant wait_time : time := 1000 ms;
 	constant wait_count : integer := wait_time / system_clock_period;
+	signal wait_counter : integer;
+	signal led_output : std_ulogic_vector(7 downto 0);
 	
 begin
 
@@ -43,18 +45,29 @@ begin
 	begin
 		if (rst = '1') then
 			current_state <= switch_display;
+		else 
+			next_state <= switch_display;
 		end if;
-		
 	end process next_state_logic;
 	
 
 
 	state_logic: process(clk, rst)
 	begin
+		if (wait_counter = 0 and current_state <= switch_display) then
+			wait_counter <= wait_count;
+		else
+			wait_counter <= wait_counter - 1;
+		end if;
 	end process state_logic;
 
 	output_logic: process(current_state)
 	begin
+		if (current_state = switch_display) then
+			led <= "0000" & switches;
+		else
+			led <= led_output;
+		end if;
 	end process output_logic;
 
 end architecture;
