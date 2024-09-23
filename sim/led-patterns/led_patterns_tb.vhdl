@@ -50,6 +50,8 @@ begin
 	stimuli_generator : process is
 	begin
 		rst_tb <= '1', '0' after 50 ns;
+--		push_button_tb <= '0';
+		wait for 50 ns;
 
 		print("----------------------------------------------------");
       print("Testing switch display");
