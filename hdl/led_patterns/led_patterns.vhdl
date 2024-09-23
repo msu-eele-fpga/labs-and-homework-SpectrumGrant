@@ -61,13 +61,12 @@ begin
 		end if;
 	end process state_logic;
 
-	output_logic: process(current_state)
+	output_logic: process(clk, rst)
 	begin
-		if (current_state = switch_display) then
-			led <= "0000" & switches;
-		else
-			led <= led_output;
-		end if;
+		case (current_state) is
+			when switch_display => led <= "0000" & switches;
+			when others => led <= "10101010";
+		end case;
 	end process output_logic;
 
 end architecture;
