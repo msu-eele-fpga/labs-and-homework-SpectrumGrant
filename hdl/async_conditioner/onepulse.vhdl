@@ -11,10 +11,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity onepulse is
-	port (clk		: in	std_logic;
-			rst		: in	std_logic;
-			input		: in	std_logic;
-			pulse		: out	std_logic);
+	port (clk		: in	std_ulogic;
+			rst		: in	std_ulogic;
+			input		: in	std_ulogic;
+			pulse		: out	std_ulogic);
 end entity;
 
 architecture onepulse_arch of onepulse is 
