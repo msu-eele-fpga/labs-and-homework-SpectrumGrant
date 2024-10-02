@@ -135,6 +135,7 @@ begin
 		elsif (rising_edge(timer_done)) then
 			case (current_state) is
 				when pattern_00 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 1));
+				when pattern_01 => led_output <= std_ulogic_vector(rotate_right(unsigned(led_output), 2));
 				when others => null;
 			end case;
 		end if;
