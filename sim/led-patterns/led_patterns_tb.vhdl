@@ -61,7 +61,7 @@ begin
       print("----------------------------------------------------");
 		switches_tb <= "0000";
 		push_button_tb <= '1', '0' after 10 ms;		
-		wait for 2.5 sec;
+		wait for 6 sec;
 		switches_tb <= "0001";
 		push_button_tb <= '1', '0' after 10 ms;		
 		wait for 2.5 sec;
