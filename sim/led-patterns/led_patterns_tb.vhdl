@@ -26,7 +26,7 @@ signal rst_tb			: std_ulogic := '0';
 signal push_button_tb: std_ulogic := '0';
 signal hps_led_control_tb: boolean := false;
 signal switches_tb	: std_ulogic_vector(3 downto 0) := "0000";
-signal base_period_tb: unsigned(7 downto 0);
+signal base_period_tb: unsigned(7 downto 0) := "00010000";
 signal led_reg_tb		: std_ulogic_vector(7 downto 0) := "00000000";
 signal led_tb			: std_ulogic_vector(7 downto 0) := "00000000";
 
@@ -59,9 +59,18 @@ begin
 		print("----------------------------------------------------");
       print("Testing switch display");
       print("----------------------------------------------------");
-		switches_tb <= "1010";
+		switches_tb <= "0000";
 		push_button_tb <= '1', '0' after 10 ms;		
-		wait for 1 sec;
+		wait for 2.5 sec;
+		switches_tb <= "0001";
+		push_button_tb <= '1', '0' after 10 ms;		
+		wait for 2.5 sec;
+		switches_tb <= "0010";
+		push_button_tb <= '1', '0' after 10 ms;		
+		wait for 2.5 sec;
+		switches_tb <= "0011";
+		push_button_tb <= '1', '0' after 10 ms;		
+		wait for 2.5 sec;
 
 		std.env.finish;
 	end process stimuli_generator;
