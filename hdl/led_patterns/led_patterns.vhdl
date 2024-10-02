@@ -35,14 +35,14 @@ architecture led_patterns_arch of led_patterns is
 	signal current_state : state_type; -- tracks current state
 	signal next_state : state_type; -- tracks which state to move into
 	signal switch_state : state_type; -- tracks last valid switch setting
+	signal state_pulse : std_ulogic := '0';
 
 	signal wait_counter : integer; -- current count for the switch value display
-	signal led_counter : integer := 0;
 	signal switch_hold_value : std_ulogic_vector(3 downto 0);
 	signal led_output : std_ulogic_vector(7 downto 0) := "00000000";
 
 	signal timer : integer := 0;
-	signal timer_done : std_ulogic := '0';
+	signal timer_done : std_ulogic := '1';
 	
 --	signal pattern_counter : integer;
 	-- convert system_clock_period to frequency, then can multiply base_period by frequency and treat answer as having the same number of decimal places.
@@ -54,6 +54,11 @@ begin
 		if (rst = '1') then
 			current_state <= standby;
 		elsif (rising_edge(clk)) then
+			if (current_state = next_state) then
+				state_pulse <= '0';
+			else
+				state_pulse <= '1';
+			end if;
 			current_state <= next_state;
 		end if;
 	end process state_memory;
@@ -86,18 +91,31 @@ begin
 	
 
 
-	state_logic: process(clk, rst)
+	state_logic: process(clk, state_pulse, rst)
 	begin
 		if (rst = '1') then
 			timer <= 0;
-		elsif (rising_edge(clk) and timer = 0) then
-			timer_done <= '1';
-			case (current_state) is
-				when pattern_00 => timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
-				when pattern_01 => timer <= to_integer(shift_right((system_clock_frequency * base_period), 6)) - 1;
-				when pattern_02 => timer <= to_integer(shift_right((system_clock_frequency * base_period), 3)) - 1;
-				when pattern_03 => timer <= to_integer(shift_right((system_clock_frequency * base_period), 7)) - 1;
+		elsif (rising_edge(state_pulse)) then
+			case (next_state) is 
+				when pattern_00 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
 				when others => timer <= 0;
+			end case;
+		elsif (rising_edge(clk) and timer = 0) then
+			case (current_state) is
+				when pattern_00 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
+					timer_done <= '1';
+				when pattern_01 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 6)) - 1;
+					timer_done <= '1';
+				when pattern_02 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 3)) - 1;
+					timer_done <= '1';
+				when pattern_03 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 7)) - 1;
+					timer_done <= '1';
+				when others => timer <= 0; timer_done <= '0';
 			end case;
 		elsif (rising_edge(clk)) then
 			timer <= timer - 1;
@@ -105,8 +123,21 @@ begin
 		end if;
 	end process state_logic;
 
---	led_update: process(clk)
---	begin
+	led_update: process(state_pulse, timer_done)
+	begin
+		-- led_output initialization
+		if (rising_edge(state_pulse)) then
+			case (next_state) is
+				when pattern_00 => led_output <= "00000001";
+				when pattern_01 => led_output <= "11000000";
+				when others => led_output <= "00000000";
+			end case;
+		elsif (rising_edge(timer_done)) then
+			case (current_state) is
+				when pattern_00 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 1));
+				when others => null;
+			end case;
+		end if;
 --		if (led_counter > 0) then
 --			led_counter = led_counter - 1;
 --		else 
@@ -115,11 +146,11 @@ begin
 --				when others => led_output = "00000000";
 --			end case;
 --		end if
---	end process led_update;
+	end process led_update;
 	
-	output_logic: process(timer_done, current_state, rst)
+	output_logic: process(clk, rst)
 	begin
-		if (hps_led_control = false) then
+		if (hps_led_control = false and rising_edge(clk)) then
 			case (current_state) is
 				when switch_display => led <= "0000" & switch_hold_value;
 				when pattern_00 => led <= led_output;
@@ -128,7 +159,7 @@ begin
 				when pattern_03 => led <= led_output;
 				when others => led <= "10101010";
 			end case;
-		else
+		elsif (hps_led_control = true) then
 			led <= led_reg;
 		end if;
 	end process output_logic;
