@@ -30,12 +30,15 @@ signal base_period_tb: unsigned(7 downto 0);
 signal led_reg_tb		: std_ulogic_vector(7 downto 0) := "00000000";
 signal led_tb			: std_ulogic_vector(7 downto 0) := "00000000";
 
+constant CLK_PERIOD : time := 10 ms;
 
 begin
-
   clk_tb <= not clk_tb after CLK_PERIOD / 2;
 
 	duv : entity work.led_patterns
+		generic map (
+			system_clock_period => 10 ms
+		)
 		port map (
 			clk					=> clk_tb,
 			rst					=> rst_tb,
@@ -57,7 +60,7 @@ begin
       print("Testing switch display");
       print("----------------------------------------------------");
 		switches_tb <= "1010";
-		push_button_tb <= '1', '0' after 50 ns;		
+		push_button_tb <= '1', '0' after 10 ms;		
 		wait for 1 sec;
 
 		std.env.finish;
