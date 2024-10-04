@@ -65,7 +65,7 @@ begin
 		end if;
 	end process state_memory;
 	
-	next_state_logic: process(push_button, clk, rst)
+	next_state_logic: process(push_button, current_state, clk, rst)
 	begin
 		if (rst = '1') then
 			switch_state <= pattern_00;
@@ -184,18 +184,20 @@ begin
 	
 	output_logic: process(clk, rst)
 	begin
-		if (hps_led_control = false and rising_edge(clk)) then
-			case (current_state) is
-				when switch_display => led <= "0000" & switch_hold_value;
-				when pattern_00 => led <= led_output;
-				when pattern_01 => led <= led_output;
-				when pattern_02 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-				when pattern_03 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-				when pattern_04 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-				when others => led <= "00000000";
-			end case;
-		elsif (hps_led_control = true) then
-			led <= led_reg;
+		if (rising_edge(clk)) then
+			if (hps_led_control = false) then
+				case (current_state) is
+					when switch_display => led <= "0000" & switch_hold_value;
+					when pattern_00 => led <= led_output;
+					when pattern_01 => led <= led_output;
+					when pattern_02 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
+					when pattern_03 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
+					when pattern_04 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
+					when others => led <= "00000000";
+				end case;
+			else
+				led <= led_reg;
+			end if;
 		end if;
 	end process output_logic;
 
