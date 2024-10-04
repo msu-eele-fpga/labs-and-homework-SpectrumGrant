@@ -192,7 +192,7 @@ begin
 				when pattern_02 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
 				when pattern_03 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
 				when pattern_04 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-				when others => led <= "10101010";
+				when others => led <= "00000000";
 			end case;
 		elsif (hps_led_control = true) then
 			led <= led_reg;
