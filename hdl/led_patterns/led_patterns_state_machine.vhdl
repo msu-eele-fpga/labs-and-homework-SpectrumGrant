@@ -12,7 +12,7 @@ use ieee.std_logic_1164.all;
 use ieee.math_real.all;
 use ieee.numeric_std.all;
 
-entity led_patterns is
+entity led_patterns_state_machine is
 	generic (
 		system_clock_period : time := 20 ns
 	);
@@ -28,7 +28,7 @@ entity led_patterns is
 	);
 end entity;
 
-architecture led_patterns_arch of led_patterns is 
+architecture led_patterns_state_machine_arch of led_patterns_state_machine is 
 	constant system_clock_frequency : integer := 1 sec / system_clock_period; -- 50,000,000 for 20ns
 
 	type state_type is (standby, switch_display, pattern_00, pattern_01, pattern_02, pattern_03, pattern_04);
@@ -44,6 +44,8 @@ architecture led_patterns_arch of led_patterns is
 	signal timer : integer := 0;
 	signal timer_done : std_ulogic := '1';
 	
+	signal pattern_counter : integer := 0;
+	signal prev_pattern_counter : integer := 0;
 --	signal pattern_counter : integer;
 	-- convert system_clock_period to frequency, then can multiply base_period by frequency and treat answer as having the same number of decimal places.
 	
@@ -99,6 +101,12 @@ begin
 			case (next_state) is 
 				when pattern_00 => 
 					timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
+				when pattern_01 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 6)) - 1;
+				when pattern_02 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 3)) - 1;
+				when pattern_03 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 7)) - 1;
 				when others => timer <= 0;
 			end case;
 		elsif (rising_edge(clk) and timer = 0) then
@@ -115,6 +123,9 @@ begin
 				when pattern_03 => 
 					timer <= to_integer(shift_right((system_clock_frequency * base_period), 7)) - 1;
 					timer_done <= '1';
+				when pattern_04 => 
+					timer <= to_integer(shift_right((system_clock_frequency * base_period), 4)) - 1;
+					timer_done <= '1';
 				when others => timer <= 0; timer_done <= '0';
 			end case;
 		elsif (rising_edge(clk)) then
@@ -130,12 +141,34 @@ begin
 			case (next_state) is
 				when pattern_00 => led_output <= "00000001";
 				when pattern_01 => led_output <= "11000000";
+				when pattern_02 => pattern_counter <= 125;
+				when pattern_03 => pattern_counter <= 5;
+				when pattern_04 => pattern_counter <= 0; prev_pattern_counter <= 0;
 				when others => led_output <= "00000000";
 			end case;
 		elsif (rising_edge(timer_done)) then
 			case (current_state) is
-				when pattern_00 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 1));
-				when pattern_01 => led_output <= std_ulogic_vector(rotate_right(unsigned(led_output), 2));
+				when pattern_00 => led_output <= std_ulogic_vector(rotate_right(unsigned(led_output), 1));
+				when pattern_01 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 2));
+				when pattern_02 => 
+					if (pattern_counter = 127) then
+						pattern_counter <= 0;
+					else
+						pattern_counter <= pattern_counter + 1;
+					end if;
+				when pattern_03 => 
+					if (pattern_counter = 0) then
+						pattern_counter <= 127;
+					else
+						pattern_counter <= pattern_counter - 1; 
+					end if;
+				when pattern_04 => 
+					if (pattern_counter = 0) then
+						pattern_counter <= 1;
+					else 
+						prev_pattern_counter <= pattern_counter;
+						pattern_counter <= pattern_counter + prev_pattern_counter;
+					end if;
 				when others => null;
 			end case;
 		end if;
@@ -156,8 +189,9 @@ begin
 				when switch_display => led <= "0000" & switch_hold_value;
 				when pattern_00 => led <= led_output;
 				when pattern_01 => led <= led_output;
-				when pattern_02 => led <= led_output;
-				when pattern_03 => led <= led_output;
+				when pattern_02 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
+				when pattern_03 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
+				when pattern_04 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
 				when others => led <= "10101010";
 			end case;
 		elsif (hps_led_control = true) then
