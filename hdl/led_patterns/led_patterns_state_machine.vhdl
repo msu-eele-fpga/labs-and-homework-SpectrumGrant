@@ -200,4 +200,3 @@ begin
 	end process output_logic;
 
 end architecture;
-
