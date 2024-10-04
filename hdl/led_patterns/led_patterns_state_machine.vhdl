@@ -134,43 +134,49 @@ begin
 		end if;
 	end process state_logic;
 
-	led_update: process(state_pulse, timer_done)
+	led_update: process(clk, state_pulse, timer_done)
 	begin
 		-- led_output initialization
-		if (rising_edge(state_pulse)) then
-			case (next_state) is
-				when pattern_00 => led_output <= "00000001";
-				when pattern_01 => led_output <= "11000000";
-				when pattern_02 => pattern_counter <= 125;
-				when pattern_03 => pattern_counter <= 5;
-				when pattern_04 => pattern_counter <= 0; prev_pattern_counter <= 0;
-				when others => led_output <= "00000000";
-			end case;
-		elsif (rising_edge(timer_done)) then
-			case (current_state) is
-				when pattern_00 => led_output <= std_ulogic_vector(rotate_right(unsigned(led_output), 1));
-				when pattern_01 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 2));
-				when pattern_02 => 
-					if (pattern_counter = 127) then
-						pattern_counter <= 0;
-					else
-						pattern_counter <= pattern_counter + 1;
-					end if;
-				when pattern_03 => 
-					if (pattern_counter = 0) then
-						pattern_counter <= 127;
-					else
-						pattern_counter <= pattern_counter - 1; 
-					end if;
-				when pattern_04 => 
-					if (pattern_counter = 0) then
-						pattern_counter <= 1;
-					else 
-						prev_pattern_counter <= pattern_counter;
-						pattern_counter <= pattern_counter + prev_pattern_counter;
-					end if;
-				when others => null;
-			end case;
+		if (rising_edge(clk)) then
+			if (state_pulse = '1') then
+				case (next_state) is
+					when pattern_00 => led_output <= "00000001";
+					when pattern_01 => led_output <= "11000000";
+					when pattern_02 => pattern_counter <= 125;
+					when pattern_03 => pattern_counter <= 5;
+					when pattern_04 => pattern_counter <= 0; prev_pattern_counter <= 0;
+					when others => led_output <= "00000000";
+				end case;
+			elsif (timer_done = '1') then
+				case (current_state) is
+					when pattern_00 => led_output <= std_ulogic_vector(rotate_right(unsigned(led_output), 1));
+					when pattern_01 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 2));
+					when pattern_02 => 
+						if (pattern_counter = 127) then
+							pattern_counter <= 0;
+						else
+							pattern_counter <= pattern_counter + 1;
+						end if;
+					when pattern_03 => 
+						if (pattern_counter = 0) then
+							pattern_counter <= 127;
+						else
+							pattern_counter <= pattern_counter - 1; 
+						end if;
+					when pattern_04 => 
+						if (pattern_counter = 0) then
+							pattern_counter <= 1;
+						else 
+							prev_pattern_counter <= pattern_counter;
+							pattern_counter <= pattern_counter + prev_pattern_counter;
+						end if;
+					when others => null;
+				end case;
+			end if;
+		else
+			pattern_counter <= pattern_counter;
+			prev_pattern_counter <= prev_pattern_counter;
+			led_output <= led_output;
 		end if;
 --		if (led_counter > 0) then
 --			led_counter = led_counter - 1;
