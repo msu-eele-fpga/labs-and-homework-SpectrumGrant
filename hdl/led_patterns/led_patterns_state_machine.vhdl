@@ -70,20 +70,20 @@ begin
 		if (rst = '1') then
 			switch_state <= pattern_00;
 			next_state <= standby;
-		elsif (rising_edge(push_button)) then
-			next_state <= switch_display;
-			wait_counter <= system_clock_frequency - 1;
-			switch_hold_value <= switches;
-			case (switches) is
-					when "0000" => switch_state <= pattern_00; 
-					when "0001" => switch_state <= pattern_01; 
-					when "0010" => switch_state <= pattern_02; 
-					when "0011" => switch_state <= pattern_03; 
-					when "0100" => switch_state <= pattern_04; 
-					when others => switch_state <= switch_state;
-			end case;
-		else
-			if (rising_edge(clk) and current_state = switch_display and wait_counter > 0) then
+		elsif (rising_edge(clk)) then
+			if (push_button = '1') then
+				next_state <= switch_display;
+				wait_counter <= system_clock_frequency - 1;
+				switch_hold_value <= switches;
+				case (switches) is
+						when "0000" => switch_state <= pattern_00; 
+						when "0001" => switch_state <= pattern_01; 
+						when "0010" => switch_state <= pattern_02; 
+						when "0011" => switch_state <= pattern_03; 
+						when "0100" => switch_state <= pattern_04; 
+						when others => switch_state <= switch_state;
+				end case;
+			elsif (current_state = switch_display and wait_counter > 0) then
 				wait_counter <= wait_counter - 1;
 			elsif (current_state = switch_display and wait_counter = 0) then
 				next_state <= switch_state;
@@ -97,7 +97,7 @@ begin
 	begin
 		if (rst = '1') then
 			timer <= 0;
-		elsif (rising_edge(state_pulse)) then
+		elsif (rising_edge(clk) and state_pulse = '1') then
 			case (next_state) is 
 				when pattern_00 => 
 					timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
