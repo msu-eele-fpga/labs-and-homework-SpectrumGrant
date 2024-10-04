@@ -16,10 +16,10 @@ entity debouncer is
 		debounce_time	: time
 	);
 	port (
-		clk				: in	std_logic;
-		rst				: in	std_logic;
-		input				: in	std_logic;
-		debounced		: out	std_logic
+		clk				: in	std_ulogic;
+		rst				: in	std_ulogic;
+		input				: in	std_ulogic;
+		debounced		: out	std_ulogic
 	);
 end entity debouncer;
 
@@ -29,7 +29,7 @@ architecture debouncer_arch of debouncer is
 	
 	constant wait_count:	integer := debounce_time / clk_period;
 	signal count: 			integer := debounce_time / clk_period;
-	signal hold_value:		std_logic := '0';
+	signal hold_value:		std_ulogic := '0';
 
 begin
 	state_logic: process(clk, rst)

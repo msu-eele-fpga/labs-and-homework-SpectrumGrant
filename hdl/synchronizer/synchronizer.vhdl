@@ -22,7 +22,7 @@ end entity synchronizer;
 
 architecture synchronizer_arch of synchronizer is
 
-	signal not_sync_yet : std_logic;
+	signal not_sync_yet : std_ulogic;
 	
 begin 
 	Synchronize : process(clk)

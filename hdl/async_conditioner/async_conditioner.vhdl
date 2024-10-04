@@ -11,10 +11,14 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity async_conditioner is
-	port (clk		: in	std_logic;
-			rst		: in	std_logic;
-			async		: in	std_logic;
-			sync		: out	std_logic);
+	generic(
+		clk_period		: time := 20 ns;
+		debounce_time	: time := 100 ms
+	);
+	port (clk		: in	std_ulogic;
+			rst		: in	std_ulogic;
+			async		: in	std_ulogic;
+			sync		: out	std_ulogic);
 end entity;
 
 architecture async_conditioner_arch of async_conditioner is
@@ -32,24 +36,24 @@ architecture async_conditioner_arch of async_conditioner is
 			debounce_time	: time := 100 ms
 		);
 		port (
-			clk				: in	std_logic;
-			rst				: in	std_logic;
-			input				: in	std_logic;
-			debounced		: out	std_logic
+			clk				: in	std_ulogic;
+			rst				: in	std_ulogic;
+			input				: in	std_ulogic;
+			debounced		: out	std_ulogic
 		);
 	end component debouncer;
 	
 	component onepulse
 		port (
-			clk		: in	std_logic;
-			rst		: in	std_logic;
-			input		: in	std_logic;
-			pulse		: out	std_logic
+			clk		: in	std_ulogic;
+			rst		: in	std_ulogic;
+			input		: in	std_ulogic;
+			pulse		: out	std_ulogic
 		);
 	end component;
 
-	signal synchronizer_output: std_logic;
-	signal debounced_output: std_logic;
+	signal synchronizer_output: std_ulogic;
+	signal debounced_output: std_ulogic;
 	
 begin
 	CMP_SYNCHRONIZER: synchronizer
@@ -60,6 +64,10 @@ begin
 	);
 	
 	CMP_DEBOUNCER: debouncer
+	generic map(
+		clk_period => clk_period,
+		debounce_time => debounce_time
+	)
 	port map(
 		clk => clk,
 		rst => rst,
