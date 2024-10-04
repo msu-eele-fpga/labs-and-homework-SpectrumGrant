@@ -52,7 +52,7 @@ begin
 
 	stimuli_generator : process is
 	begin
-		rst_tb <= '1', '0' after 50 ns;
+		rst_tb <= '1', '0' after 5 ms;
 --		push_button_tb <= '0';
 		wait for 50 ns;
 
@@ -67,10 +67,13 @@ begin
 		wait for 5 sec;
 		switches_tb <= "0010";
 		push_button_tb <= '1', '0' after 10 ms;		
-		wait for 2.5 sec;
+		wait for 40 sec;
 		switches_tb <= "0011";
 		push_button_tb <= '1', '0' after 10 ms;		
-		wait for 2.5 sec;
+		wait for 5 sec;
+		switches_tb <= "0100";
+		push_button_tb <= '1', '0' after 10 ms;		
+		wait for 10 sec;
 
 		std.env.finish;
 	end process stimuli_generator;
