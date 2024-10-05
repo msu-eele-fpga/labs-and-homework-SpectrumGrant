@@ -32,15 +32,17 @@ architecture led_patterns_state_machine_arch of led_patterns_state_machine is
 	constant system_clock_frequency : integer := 1 sec / system_clock_period; -- 50,000,000 for 20ns
 
 	type state_type is (standby, switch_display, pattern_00, pattern_01, pattern_02, pattern_03, pattern_04);
-	signal current_state : state_type; -- tracks current state
-	signal next_state : state_type; -- tracks which state to move into
+	signal current_state : state_type := standby; -- tracks current state
+	signal next_state : state_type := standby; -- tracks which state to move into
 	signal switch_state : state_type; -- tracks last valid switch setting
 	signal state_pulse : std_ulogic := '0';
 
 	signal wait_counter : integer; -- current count for the switch value display
 	signal switch_hold_value : std_ulogic_vector(3 downto 0);
-	signal led_output : std_ulogic_vector(7 downto 0) := "00000000";
+	signal led_output : std_ulogic_vector(6 downto 0) := "0000000";
+	signal heartbeat : std_ulogic := '0';
 
+	signal heartbeat_timer : integer := 0;
 	signal timer : integer := 0;
 	signal timer_done : std_ulogic := '1';
 	
@@ -140,12 +142,12 @@ begin
 		if (rising_edge(clk)) then
 			if (state_pulse = '1') then
 				case (next_state) is
-					when pattern_00 => led_output <= "00000001";
-					when pattern_01 => led_output <= "00001100";
+					when pattern_00 => led_output <= "0000001";
+					when pattern_01 => led_output <= "0001100";
 					when pattern_02 => pattern_counter <= 125;
 					when pattern_03 => pattern_counter <= 5;
 					when pattern_04 => pattern_counter <= 0; prev_pattern_counter <= 0;
-					when others => led_output <= "00000000";
+					when others => led_output <= "0000000";
 				end case;
 			elsif (timer_done = '1') then
 				case (current_state) is
@@ -184,18 +186,31 @@ begin
 --		end if
 	end process led_update;
 	
+	heartbeat_process : process (clk, rst)
+	begin
+		if (rising_edge(clk)) then
+			if (heartbeat_timer = 0) then
+				heartbeat_timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 4)) - 1;
+				heartbeat <= not heartbeat;
+			else
+				heartbeat_timer <= heartbeat_timer - 1;
+			end if;
+		end if;
+	end process heartbeat_process;
+	
 	output_logic: process(clk, rst)
 	begin
 		if (rising_edge(clk)) then
 			if (hps_led_control = false) then
+				led(7) <= heartbeat;
 				case (current_state) is
-					when switch_display => led <= "0000" & switch_hold_value;
-					when pattern_00 => led <= led_output;
-					when pattern_01 => led <= led_output;
-					when pattern_02 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-					when pattern_03 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-					when pattern_04 => led <= '0' & std_ulogic_vector(to_unsigned(pattern_counter, 7));
-					when others => led <= "00000000";
+					when switch_display => led(6 downto 0) <= "000" & switch_hold_value;
+					when pattern_00 => led(6 downto 0) <= led_output;
+					when pattern_01 => led(6 downto 0) <= led_output;
+					when pattern_02 => led(6 downto 0) <= std_ulogic_vector(to_unsigned(pattern_counter, 7));
+					when pattern_03 => led(6 downto 0) <= std_ulogic_vector(to_unsigned(pattern_counter, 7));
+					when pattern_04 => led(6 downto 0) <= std_ulogic_vector(to_unsigned(pattern_counter, 7));
+					when others => led(6 downto 0) <= "0000000";
 				end case;
 			else
 				led <= led_reg;
