@@ -107,10 +107,13 @@ architecture DE10Nano_arch of DE10_Top_Level is
 	
 begin
 	CMP_LED_PATTERNS : led_patterns
+	generic map (
+		system_clock_period => 20 ns
+	)
 	port map (
 		clk => FPGA_CLK1_50,
-		rst => KEY(1),
-		push_button => KEY(0),
+		rst => not KEY(0),
+		push_button => not KEY(1),
 		switches => SW,
 		hps_led_control => false,
 		base_period => "00010000",

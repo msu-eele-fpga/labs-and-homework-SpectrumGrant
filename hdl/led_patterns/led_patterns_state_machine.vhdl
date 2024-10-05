@@ -93,38 +93,38 @@ begin
 	
 
 
-	state_logic: process(clk, state_pulse, rst)
+	state_logic: process(clk, state_pulse, rst, timer)
 	begin
 		if (rst = '1') then
 			timer <= 0;
 		elsif (rising_edge(clk) and state_pulse = '1') then
 			case (next_state) is 
 				when pattern_00 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
-				when pattern_01 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 6)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 5)) - 1;
+				when pattern_01 =>
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 6)) - 1; 
 				when pattern_02 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 3)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 3)) - 1;
 				when pattern_03 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 7)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 7)) - 1;
 				when others => timer <= 0;
 			end case;
 		elsif (rising_edge(clk) and timer = 0) then
 			case (current_state) is
 				when pattern_00 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 5)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 5)) - 1;
 					timer_done <= '1';
 				when pattern_01 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 6)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 6)) - 1;
 					timer_done <= '1';
 				when pattern_02 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 3)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 3)) - 1;
 					timer_done <= '1';
 				when pattern_03 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 7)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 7)) - 1;
 					timer_done <= '1';
 				when pattern_04 => 
-					timer <= to_integer(shift_right((system_clock_frequency * base_period), 4)) - 1;
+					timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 4)) - 1;
 					timer_done <= '1';
 				when others => timer <= 0; timer_done <= '0';
 			end case;
@@ -141,7 +141,7 @@ begin
 			if (state_pulse = '1') then
 				case (next_state) is
 					when pattern_00 => led_output <= "00000001";
-					when pattern_01 => led_output <= "11000000";
+					when pattern_01 => led_output <= "00001100";
 					when pattern_02 => pattern_counter <= 125;
 					when pattern_03 => pattern_counter <= 5;
 					when pattern_04 => pattern_counter <= 0; prev_pattern_counter <= 0;
@@ -150,7 +150,7 @@ begin
 			elsif (timer_done = '1') then
 				case (current_state) is
 					when pattern_00 => led_output <= std_ulogic_vector(rotate_right(unsigned(led_output), 1));
-					when pattern_01 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 2));
+					when pattern_01 => led_output <= std_ulogic_vector(rotate_left(unsigned(led_output), 1));
 					when pattern_02 => 
 						if (pattern_counter = 127) then
 							pattern_counter <= 0;
@@ -173,10 +173,6 @@ begin
 					when others => null;
 				end case;
 			end if;
-		else
-			pattern_counter <= pattern_counter;
-			prev_pattern_counter <= prev_pattern_counter;
-			led_output <= led_output;
 		end if;
 --		if (led_counter > 0) then
 --			led_counter = led_counter - 1;

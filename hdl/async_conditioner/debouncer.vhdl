@@ -32,7 +32,7 @@ architecture debouncer_arch of debouncer is
 	signal hold_value:		std_ulogic := '0';
 
 begin
-	state_logic: process(clk, rst)
+	state_logic: process(clk, rst, input)
 	begin
 		if (rst = '1') then
 			current_state <= ready;
