@@ -54,16 +54,16 @@ begin
 	begin
 		rst_tb <= '1', '0' after 5 ms;
 --		push_button_tb <= '0';
-		wait for 50 ns;
+		wait for 20 ms;
 
 		print("----------------------------------------------------");
       print("Testing switch display");
       print("----------------------------------------------------");
 		switches_tb <= "0000";
-		push_button_tb <= '1', '0' after 10 ms;		
+		push_button_tb <= '1', '0' after 2900 ms;		
 		wait for 6 sec;
 		switches_tb <= "0001";
-		push_button_tb <= '1', '0' after 10 ms;		
+		push_button_tb <= '1', '0' after 100 ms;		
 		wait for 5 sec;
 		switches_tb <= "0010";
 		push_button_tb <= '1', '0' after 10 ms;		
