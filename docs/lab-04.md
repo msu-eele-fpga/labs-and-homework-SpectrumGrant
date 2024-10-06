@@ -24,8 +24,14 @@ The LED patterns project involved creating a vhdl program that was capable of sw
 
 ## System Architecture
 
-![System Block Diagram](assets/Lab04_BlockDiagram.pdf)
+The system is largely composed of three blocks, the asynchronous control that conditions the pushbutton, the LED state machine, and the LED control, which outputs either the hardware state machine output or the software override to the LEDs.
 
-## Deliverables
+The state machine consists of 6 states, one which displays the switch code, and 5 that display different LED patterns. When the push button is pressed, the system will switch from whichever display state that is currently active, to the switch display state. From here, after one second has passed, it will switch to the new state based on the switch inputs, or back to the previous state if the switch inputs are invalid.
 
-n/a
+![System Block Diagram](assets/Lab04_BlockDiagram.png)
+
+## User Defined Pattern Implementation
+
+The user defined pattern was implemented to update every 1 * base rate seconds, to fill in the pattern of each state being a multiple of two, raised to the powers -3, -2, -1, 0, and 1.
+
+The pattern itself is the Fibbonaci sequence, displayed on 7 bits, starting with 1. This was implemented by keeping track of the previously displayed value and adding it to the current value each update. This was chosen to allow for values exceeding 7 bits to be displayed as the sequence quickly leaves the range allowable with just 7 bits of storage and is more visually interesting.
