@@ -1,0 +1,124 @@
+\documentclass[tikz]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usetikzlibrary{shapes.geometric}
+\usepackage{pgfplots}
+
+\pagenumbering{gobble}
+
+\pgfplotsset{width=10cm, height=5.75cm, compat=1.9}
+
+\begin{document}
+
+\tikzset{
+block/.style = {draw, fill=white, rectangle, minimum height=3em, minimum width=3em},
+tmp/.style  = {coordinate}, 
+sum/.style= {draw, fill=white, circle, node distance=1cm},
+input/.style = {draw, circle},
+multiplexer/.style = {draw, trapezium, shape border rotate=270},
+output/.style= {coordinate},
+coor/.style= {coordinate},
+pinstyle/.style = {pin edge={to-,thin,black}
+}
+}
+\noindent
+\begin{tikzpicture}[auto, node distance=1.7cm,>=latex', yscale=1]
+	
+	\draw (100mm, 25mm) node [] () {\huge Block Diagram - Lab 04};
+	\node [input, name=clock] (clock) {CLK};
+	\node [input, name=push_button, right of=clock] (push_button) {PB};
+	\node [input, name=reset, below of=push_button] (reset) {RST};	
+	
+	% push button conditioning
+	\node [block, right of=push_button](synchronizer){Synchronizer};
+	\node [block, below of=synchronizer](debouncer){Debouncer};
+	\node [block, below of=debouncer](one_pulse){One Pulse};
+	\node [coor, right of=one_pulse](one_pulse_pad){};
+
+	\node [block, right of=one_pulse_pad, scale=.7](displaycode){Display SW Code};
+	\node [coor, right of=displaycode](state_start){};
+	\node [block, above of=clock](everything){Everything};
+
+	
+	\node [block, right of=state_start](State3){Pattern 2};
+	\node [block, above of=State3](State2){Pattern 1};
+	\node [block, above of=State2](State1){Pattern 0};
+	\node [block, below of=State3](State4){Pattern 3};
+	\node [block, below of=State4](State5){Pattern 4};
+	\node [input, name=switch,  below of=one_pulse] (switch) {SW};	
+	\node [coor, right of=State3](state_stop){};
+	\node [coor, right of=state_stop](plex_start){};
+
+	\node [block, above of=synchronizer](ARMHPS){ARM HPS};
+
+	\node [multiplexer, right of=plex_start](plex){HPS};
+	
+	\draw (plex) ++(-0.45, -0.5) node[coordinate](plexin2){};
+	\draw (plex) ++(-0.45, 0.5) node[coordinate](plexin1){};
+	\node [coor, above of=plex_start](plexinput1){};
+
+	\node [block, right of=plex](LEDs){LEDs};
+	\node [input, below of=plex, scale=0.4, ellipse](HPSLED){\huge LED CONTROL};
+
+	\draw[->] (switch) -| (displaycode);
+	\draw[->] (push_button) -- (synchronizer);
+	\draw[->] (synchronizer) -- (debouncer);
+	\draw[->] (debouncer) -- (one_pulse);
+	\draw[->] (one_pulse) -- (displaycode);
+	\draw[-] (displaycode) -- (state_start);
+	\draw[->] (state_start) |- node[left, scale=0.8]{SW=0} (State1);
+	\draw[->] (state_start) |- node[left, scale=0.8]{SW=1}  (State2);
+	\draw[->] (state_start) |- node[above, scale=0.8]{SW=2} (State3);
+	\draw[->] (state_start) |- node[left, scale=0.8]{SW=4}  (State4);
+	\draw[->] (state_start) |- node[left, scale=0.8]{SW=5}  (State5);
+	\draw[-] (State1) -| (state_stop);
+	\draw[-] (State2) -| (state_stop);
+	\draw[-] (State3) -| (state_stop);
+	\draw[-] (State4) -| (state_stop);
+	\draw[-] (State5) -| (state_stop);
+	\draw[-] (state_stop) -- (plex_start);
+	\draw[->] (plex_start) |- (plexin2);
+	\draw[-] (ARMHPS) -| (plexinput1);
+	\draw[->] (plexinput1) |- (plexin1);
+	\draw[->] (plex) -- (LEDs);	
+	\draw[->] (HPSLED) -- (plex);	
+	\draw[->] (reset) -- (debouncer);	
+	\draw[->] (reset) |- (one_pulse);
+	\draw[->] (clock) -- (everything);
+	
+	\draw[dashed, thick, blue](5, -8) rectangle (13, 1);
+	\draw(6.5, 1) node[below]{State Machine};
+
+	\draw[dashed, thick, blue](13.8, -4.5) rectangle (16.2, -2);
+	\draw(15, -2) node[below]{Output Select};
+	
+	\draw[dashed, thick, blue](2.25, -4.3) rectangle (4.7, 1);
+	\draw(3.5, 1) node[scale=0.8, below]{Input Conditioner};
+%    \node [input, name=rinput] (rinput) {};
+%    \node [sum, right of=rinput] (sum1) {};
+%    \node [block, right of=sum1] (controller) {$k_{p\beta}$};
+%    \node [block, above of=controller,node distance=1.3cm] (up){$\frac{k_{i\beta}}{s}$};
+%    \node [block, below of=controller,node distance=1.3cm] (rate) {$sk_{d\beta}$};
+%    \node [sum, right of=controller,node distance=2cm] (sum2) {};
+%    \node [block, above = 2cm of sum2](extra){$\frac{1}{\alpha_{\beta2}}$};  %
+%    \node [block, right of=sum2,node distance=2cm] (system) 
+%{$\frac{a_{\beta 2}}{s+a_{\beta 1}}$};
+%    \node [output, right of=system, node distance=2cm] (output) {};
+%    \node [tmp, below of=controller] (tmp1){$H(s)$};
+%    \draw [->] (rinput) -- node{$R(s)$} (sum1);
+%    \draw [->] (sum1) --node[name=z,anchor=north]{$E(s)$} (controller);
+%    \draw [->] (controller) -- (sum2);
+%    \draw [->] (sum2) -- node{$U(s)$} (system);
+%%    \draw [->] (system) -- node [name=y] {$Y(s)$}(output);
+%    \draw [->] (z) |- (rate);
+%    \draw [->] (rate) -| (sum2);
+%    \draw [->] (z) |- (up);
+%    \draw [->] (up) -| (sum2);
+%    \draw [->] (y) |- (tmp1)-| node[pos=0.99] {$-$} (sum1);
+%    \draw [->] (extra)--(sum2);
+%    \draw [->] ($(0,1.5cm)+(extra)$)node[above]{$d_{\beta 2}$} -- (extra);
+    \end{tikzpicture}
+%\caption{A PID Control System} \label{fig6_10}
+%\end{figure}
+
+\end{document}
