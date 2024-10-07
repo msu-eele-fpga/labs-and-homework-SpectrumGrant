@@ -31,14 +31,14 @@ end entity;
 architecture led_patterns_state_machine_arch of led_patterns_state_machine is 
 	constant system_clock_frequency : integer := 1 sec / system_clock_period; -- 50,000,000 for 20ns
 
-	type state_type is (standby, switch_display, pattern_00, pattern_01, pattern_02, pattern_03, pattern_04);
+	type state_type is (switch_display, pattern_00, pattern_01, pattern_02, pattern_03, pattern_04);
 	signal current_state : state_type := pattern_00; -- tracks current state
 	signal next_state : state_type := pattern_00; -- tracks which state to move into
-	signal switch_state : state_type; -- tracks last valid switch setting
+	signal switch_state : state_type := pattern_00; -- tracks last valid switch setting
 	signal state_pulse : std_ulogic := '0';
 
 	signal wait_counter : integer; -- current count for the switch value display
-	signal switch_hold_value : std_ulogic_vector(3 downto 0);
+	signal switch_hold_value : std_ulogic_vector(3 downto 0) := "0000";
 	signal led_output : std_ulogic_vector(6 downto 0) := "0000000";
 	signal heartbeat : std_ulogic := '0';
 
@@ -56,7 +56,7 @@ begin
 	state_memory: process(clk, rst)
 	begin
 		if (rst = '1') then
-			current_state <= standby;
+			current_state <= pattern_00;
 		elsif (rising_edge(clk)) then
 			if (current_state = next_state) then
 				state_pulse <= '0';
@@ -71,7 +71,7 @@ begin
 	begin
 		if (rst = '1') then
 			switch_state <= pattern_00;
-			next_state <= standby;
+			next_state <= pattern_00;
 		elsif (rising_edge(clk)) then
 			if (push_button = '1') then
 				next_state <= switch_display;
@@ -98,7 +98,7 @@ begin
 	state_logic: process(clk, state_pulse, rst, timer)
 	begin
 		if (rst = '1') then
-			timer <= 0;
+			timer <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * base_period, 5)) - 1;
 		elsif (rising_edge(clk) and state_pulse = '1') then
 			case (next_state) is 
 				when pattern_00 => 
@@ -139,7 +139,9 @@ begin
 	led_update: process(clk, state_pulse, timer_done)
 	begin
 		-- led_output initialization
-		if (rising_edge(clk)) then
+		if (rst = '1') then
+			led_output <= "0000001";
+		elsif (rising_edge(clk)) then
 			if (state_pulse = '1') then
 				case (next_state) is
 					when pattern_00 => led_output <= "0000001";
