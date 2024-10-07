@@ -32,8 +32,8 @@ architecture led_patterns_state_machine_arch of led_patterns_state_machine is
 	constant system_clock_frequency : integer := 1 sec / system_clock_period; -- 50,000,000 for 20ns
 
 	type state_type is (standby, switch_display, pattern_00, pattern_01, pattern_02, pattern_03, pattern_04);
-	signal current_state : state_type := standby; -- tracks current state
-	signal next_state : state_type := standby; -- tracks which state to move into
+	signal current_state : state_type := pattern_00; -- tracks current state
+	signal next_state : state_type := pattern_00; -- tracks which state to move into
 	signal switch_state : state_type; -- tracks last valid switch setting
 	signal state_pulse : std_ulogic := '0';
 
