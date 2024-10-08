@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------
--- Description:  Single pulse generator, takes input of arbitrary length and generates a single pulse on the first clk cycle with high input.
+-- Description:  State machine for LED pattern project. Uses push button input to switch between multiple states with varying LED output.
 ----------------------------------------------------------------------------
 -- Author:       Grant Kirkland
 -- Company:      Montana State University
