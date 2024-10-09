@@ -5,12 +5,12 @@ This lab involved setting up an embedded logic analyzer to look at the program d
 
 ## Deliverables
 Sample depth was set to 64, with transitional qualifiers for storage to minimize memory used, while keeping the acquisition time fast.
-![Screenshot of the sample depth information](assets/Kirkland_Lab05_SampleDepth)
+![Screenshot of the sample depth information](assets/Kirkland_Lab05_SampleDepth.png)
 
 ###Pattern 00
-![Single bit scrolling right screenshot](assets/Kirkland_Lab05_Pattern00)
+![Single bit scrolling right screenshot](assets/Kirkland_Lab05_Pattern00.png)
 ###Pattern 01
-![Two bits scrolling left](assets/Kirkland_Lab05_Pattern01)
+![Two bits scrolling left](assets/Kirkland_Lab05_Pattern01.png)
 ###Pattern 02
 !(Kirkland_Lab05_Pattern02)
 !(Kirkland_Lab05_Pattern03)
