@@ -59,7 +59,7 @@ begin
 	
 	boolean_conversion : process(hps_led_control)
 	begin
-		if hps_led_control(0) then
+		if (hps_led_control(0) = '1') then
 			bool_conversion <= true;
 		else
 			bool_conversion <= false;
@@ -85,9 +85,9 @@ begin
 	begin
 		if (rising_edge(clk) and avs_read = '1') then
 			case avs_address is 
-				when "00" => avs_readdata <= hps_led_control;
-				when "01" => avs_readdata <= base_period;
-				when "10" => avs_readdata <= led_reg;
+				when "00" => avs_readdata <= std_logic_vector(hps_led_control);
+				when "01" => avs_readdata <= std_logic_vector(base_period);
+				when "10" => avs_readdata <= std_logic_vector(led_reg);
 				when others => avs_readdata <= (others => '0');
 			end case;
 		end if;
@@ -101,9 +101,9 @@ begin
 			led_reg <= "00000000000000000000000000000000";
 		elsif (rising_edge(clk) and avs_write = '1') then
 			case avs_address is 
-				when "00" => hps_led_control <= avs_writedata(31 downto 0);
-				when "01" => base_period <= avs_writedata(31 downto 0);
-				when "10" => led_reg <= avs_writedata(31 downto 0);
+				when "00" => hps_led_control <= std_ulogic_vector(avs_writedata(31 downto 0));
+				when "01" => base_period <= std_ulogic_vector(avs_writedata(31 downto 0));
+				when "10" => led_reg <= std_ulogic_vector(avs_writedata(31 downto 0));
 				when others => null;
 			end case;
 		end if;
