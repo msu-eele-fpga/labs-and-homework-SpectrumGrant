@@ -15,9 +15,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 use IEEE.std_logic_unsigned.all;
 
-LIBRARY altera;
+library altera;
 
-USE altera.altera_primitives_components.all;
+use altera.altera_primitives_components.all;
 
 entity DE10_Top_Level is
 	port (
@@ -245,6 +245,9 @@ architecture DE10Nano_arch of DE10_Top_Level is
 			hps_io_hps_io_gpio_inst_gpio53  : inout std_logic;
 			hps_io_hps_io_gpio_inst_gpio54  : inout std_logic;
 			hps_io_hps_io_gpio_inst_gpio61  : inout std_logic;
+			led_patterns_push_button        : in    std_logic                     := 'X';             -- push_button
+			led_patterns_switches           : in    std_logic_vector(3 downto 0)  := (others => 'X'); -- switches
+			led_patterns_led                : out   std_logic_vector(7 downto 0);                     -- led
 			memory_mem_a                    : out   std_logic_vector(14 downto 0);
 			memory_mem_ba                   : out   std_logic_vector(2 downto 0);
 			memory_mem_ck                   : out   std_logic;
@@ -266,37 +269,43 @@ architecture DE10Nano_arch of DE10_Top_Level is
 		);
 	end component soc_system;
 	
-	component led_patterns is
-		generic (
-			system_clock_period : time := 20 ns
-		);
-		port (
-			clk					: in std_ulogic;
-			rst					: in std_ulogic;
-			push_button 		: in std_ulogic;
-			switches				: in std_ulogic_vector(3 downto 0);
-			hps_led_control	: in boolean;
-			base_period 		: in unsigned(7 downto 0);
-			led_reg				: in std_ulogic_vector(7 downto 0);
-			led					: out	std_ulogic_vector(7 downto 0)
-		);
-	end component;
+--	component led_patterns_avalon is 
+--		port (
+--			clk				: in	std_ulogic;
+--			rst				: in	std_ulogic;
+--			
+--			-- avalon memory-mapped slave interface
+--			avs_read			: in	std_logic;
+--			avs_write		: in	std_logic;
+--			avs_address		: in	std_logic_vector(1 downto 0);
+--			avs_readdata	: out	std_logic_vector(31 downto 0);
+--			avs_writedata	: in	std_logic_vector(31 downto 0);
+--			
+--			-- external I/O; export to top-level
+--			push_button		: in	std_ulogic;
+--			switches			: in	std_ulogic_vector(3 downto 0);
+--			led				: out	std_ulogic_vector(7 downto 0)
+--		);
+--	end component led_patterns_avalon;
+
 	
 begin
-	CMP_LED_PATTERNS : led_patterns
-	generic map (
-		system_clock_period => 20 ns
-	)
-	port map (
-		clk => fpga_clk1_50,
-		rst => not push_button_n(0),
-		push_button => not push_button_n(1),
-		switches => sw,
-		hps_led_control => false,
-		base_period => "00010000",
-		led_reg => "00000000",
-		led => led
-	);
+--	CMP_LED_PATTERNS : led_patterns_avalon
+--	generic map (
+--		system_clock_period => 20 ns
+--	)
+--	port map (
+--		clk => fpga_clk1_50,
+--		rst => not push_button_n(0),
+----		avs_read
+----		avs_write
+----		avs_address
+----		avs_readdata
+----		avs_writedata
+--		push_button => not push_button_n(1),
+--		switches => sw,
+--		led => led
+--	);
 
 	u0 : component soc_system
 		port map (
@@ -361,7 +370,12 @@ begin
 			-- HPS user I/O
 			hps_io_hps_io_gpio_inst_gpio53 => hps_led,
 			hps_io_hps_io_gpio_inst_gpio54 => hps_key,
-
+			
+			-- LED Patterns connections
+			led_patterns_push_button	=> push_button_n,
+			led_patterns_switches		=> sw,
+			led_patterns_led				=> led,		
+			
 			-- DDR3
 			memory_mem_a       => hps_ddr3_addr,
 			memory_mem_ba      => hps_ddr3_ba,
