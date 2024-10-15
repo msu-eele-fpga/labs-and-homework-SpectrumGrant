@@ -1,4 +1,4 @@
--- SPDX-License-Identifier: MIT
+	-- SPDX-License-Identifier: MIT
 -- Copyright (c) 2017 Ross K. Snider.  All rights reserved.
 ----------------------------------------------------------------------------
 -- Description:  Top level VHDL file for the DE10-Nano
@@ -372,9 +372,9 @@ begin
 			hps_io_hps_io_gpio_inst_gpio54 => hps_key,
 			
 			-- LED Patterns connections
-			led_patterns_push_button	=> push_button_n,
-			led_patterns_switches		=> sw,
-			led_patterns_led				=> led,		
+			led_patterns_push_button	=> std_logic(push_button_n(1)),
+			led_patterns_switches		=> std_logic_vector(sw),
+			std_ulogic_vector(led_patterns_led)				=> led,		
 			
 			-- DDR3
 			memory_mem_a       => hps_ddr3_addr,
@@ -395,7 +395,7 @@ begin
 			memory_oct_rzqin   => hps_ddr3_rzq,
 	
 			clk_clk       => fpga_clk1_50,
-			reset_reset_n => push_button_n(0); note that reset_reset_n is *active-low*
+			reset_reset_n => push_button_n(0) -- note that reset_reset_n is *active-low*
 		);
 
 end architecture DE10Nano_arch;
