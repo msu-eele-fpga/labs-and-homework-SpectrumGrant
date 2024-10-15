@@ -39,7 +39,7 @@ add_fileset QUARTUS_SYNTH QUARTUS_SYNTH "" ""
 set_fileset_property QUARTUS_SYNTH TOP_LEVEL led_patterns_avalon
 set_fileset_property QUARTUS_SYNTH ENABLE_RELATIVE_INCLUDE_PATHS false
 set_fileset_property QUARTUS_SYNTH ENABLE_FILE_OVERWRITE_MODE false
-add_fileset_file led_patterns_avalon.vhdl VHDL PATH /led_patterns_avalon.vhdl TOP_LEVEL_FILE
+add_fileset_file led_patterns_avalon.vhdl VHDL PATH led_patterns_avalon.vhdl TOP_LEVEL_FILE
 
 
 # 
