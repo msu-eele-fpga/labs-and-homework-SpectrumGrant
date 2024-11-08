@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <sys/mman.h> // for mmap
 #include <fcntl.h> // for file open flags
-#include <uistd.h> // for getting the page size
+#include <unistd.h> // for getting the page size
 
 void usage() {
 	fprintf(stderr, "devmem ADDRESS [VALUE]\n");
@@ -53,11 +53,11 @@ int main(int argc, char **argv) {
 	uint32_t page_aligned_addr = ADDRESS & ~(PAGE_SIZE -1);
 	printf("memory addresses: \n");
 	printf("-------------------------------------------------------------------\n");
-	printf("page aligned address = 0x%x\n"), page_aligned_addr;
+	printf("page aligned address = 0x%x\n", page_aligned_addr);
 
 	// Map a page of physical memory into virtual memory. See the mmap man page
 	// for more info: https://www.man7.org/linus/man-pages/man2/mmap.2.html.
-	uint32_t *page_virtual_addr = (uint32_t *)mmap(NULL, PAGE_SIZE, PROT_Read | PROT_WRITE, MAP_SHARED, fd, page_aligned_addr);
+	uint32_t *page_virtual_addr = (uint32_t *)mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, page_aligned_addr);
 	if (page_virtual_addr == MAP_FAILED) {
 		fprintf(stderr, "failed to map memory.\n");
 		return 1;
