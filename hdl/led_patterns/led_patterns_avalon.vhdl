@@ -50,7 +50,7 @@ architecture led_patterns_avalon_arch of led_patterns_avalon is
 			switches				: in std_ulogic_vector(3 downto 0);
 			hps_led_control	: in boolean;
 			base_period 		: in unsigned(7 downto 0);
-			led_reg				: in std_ulogic_vector(7 downto 0);
+			led_reg				: in std_ulogic_vector(6 downto 0);
 			led					: out	std_ulogic_vector(7 downto 0)
 		);
 	end component;
@@ -77,7 +77,7 @@ begin
 		switches => switches,
 		hps_led_control => bool_conversion,
 		base_period => unsigned(base_period(7 downto 0)),
-		led_reg => led_reg(7 downto 0),
+		led_reg => led_reg(6 downto 0),
 		led => led
 	);
 
