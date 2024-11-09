@@ -23,7 +23,7 @@ entity led_patterns is
 		switches				: in std_ulogic_vector(3 downto 0);
 		hps_led_control	: in boolean;
 		base_period 		: in unsigned(7 downto 0);
-		led_reg				: in std_ulogic_vector(7 downto 0);
+		led_reg				: in std_ulogic_vector(6 downto 0);
 		led					: out	std_ulogic_vector(7 downto 0)
 	);
 end entity;
@@ -51,7 +51,7 @@ architecture led_patterns_arch of led_patterns is
 		switches				: in std_ulogic_vector(3 downto 0);
 		hps_led_control	: in boolean;
 		base_period 		: in unsigned(7 downto 0);
-		led_reg				: in std_ulogic_vector(7 downto 0);
+		led_reg				: in std_ulogic_vector(6 downto 0);
 		led					: out	std_ulogic_vector(7 downto 0)
 	);
 	end component led_patterns_state_machine;

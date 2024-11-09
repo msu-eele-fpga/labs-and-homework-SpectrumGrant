@@ -23,7 +23,7 @@ entity led_patterns_state_machine is
 		switches				: in std_ulogic_vector(3 downto 0);
 		hps_led_control	: in boolean;
 		base_period 		: in unsigned(7 downto 0);
-		led_reg				: in std_ulogic_vector(7 downto 0);
+		led_reg				: in std_ulogic_vector(6 downto 0);
 		led					: out	std_ulogic_vector(7 downto 0)
 	);
 end entity;
@@ -203,8 +203,8 @@ begin
 	output_logic: process(clk, rst)
 	begin
 		if (rising_edge(clk)) then
+			led(7) <= heartbeat;
 			if (hps_led_control = false) then
-				led(7) <= heartbeat;
 				case (current_state) is
 					when switch_display => led(6 downto 0) <= "000" & switch_hold_value;
 					when pattern_00 => led(6 downto 0) <= led_output;
@@ -215,7 +215,7 @@ begin
 					when others => led(6 downto 0) <= "0000000";
 				end case;
 			else
-				led <= led_reg;
+				led(6 downto 0) <= led_reg;
 			end if;
 		end if;
 	end process output_logic;
