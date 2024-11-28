@@ -36,18 +36,18 @@ int main(int argc, char **argv) {
 	}
 	int currentArg = 0;
 	int pattern_start = 0;
-	//int pattern[];
-	// Handle arguments
+
+	// Loop through each argument, handling them using a switch statement.
 	while ((c = getopt(argc, argv, "f:hp::v")) != -1) {
 		currentArg++;
 		switch (c) {
-			case 'h':
+			case 'h': // Help
 				help();
 				return 1;
-			case 'v':
+			case 'v': // Verbose
 				flg_verbose = true;
 				break;
-			case 'f':
+			case 'f': // File
 				flg_file = true;
 				if (strcmp(optarg, "p") != 0)
 					file_name = optarg;
@@ -56,26 +56,28 @@ int main(int argc, char **argv) {
 					return 1;
 				}
 				break;
-			case 'p':
+			case 'p': // Pattern
 				flg_pattern = true;
 				pattern_start = ++currentArg;
 				if ((argc - currentArg) % 2 != 0) {
-					fprintf(stderr, "ERROR: Each pattern value needs a time value.");
+					fprintf(stderr, "ERROR: Each pattern value needs a time value.\n");
 				}
 				break;
 			case '?':
-				fprintf(stderr, "optopt %d\n", optopt);
+				help();
 				break;
 		}
 	}
-	signal(SIGINT, interrupt_handler);
 
+	// Checks for errors then calls requested function
 	if ((flg_pattern == true) && (flg_file == true)) {
 		fprintf(stderr, "ERROR: Both file and pattern specified.\n");
 		return 1;
 	} else if (flg_file == true) {
 		return file_loop(flg_verbose, file_name);
 	} else if (flg_pattern == true) {
+		// set interrupt handler for pattern loop
+		signal(SIGINT, interrupt_handler);
 		return pattern_loop(flg_verbose, pattern_start, argc, argv);
 	} else {
 		help();
@@ -85,11 +87,34 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
+/**
+ * help() - Outputs user help information.
+ * 
+ * Outputs user help information
+ */
 void help() {
-	fprintf(stderr, "led-patterns [-hv][-f FILEPATH][-p PATTERN00 DURATION00 PATTERN01 DURATION01...]\n");
-}
+	fprintf(stderr, "Usage: led-patterns [-hv][-f FILEPATH][-p PATTERN00 DURATION00 PATTERN01 DURATION01...]\n");
+	fprintf(stderr, "\nOptions:\n");
+	fprintf(stderr, "\t-h                     Show help information and exit.\n");
+	fprintf(stderr, "\t-v                     Print additional information with file and pattern commands.\n");
+	fprintf(stderr, "\t-f FILEPATH            Read file and display patterns listed.\n");
+	fprintf(stderr, "\t-p PATTERN DURATION    Cycle continuously through pattern duration pairs. Any number of inputs.\n");
+}	
 
-
+/**
+ * file_loop(bool flg_verbose, char *file_name) - Runs through pattern file.
+ * 
+ * @flg_verbose: Verbose flag determining if pattern write information is printed.
+ * @file_name: The name of file being referenced.
+ * 
+ * Takes input file name, opens file, and scans each line for the output pattern and sleep
+ * time before calling write_pattern wtih those values. Closes file after completing, and 
+ * returns control of LEDs to hardware.
+ * 
+ * Return: 0 if completed successfully, 1 if error occurred.
+ * 
+ * Return will never be reached if working successfully, interrupt triggered through ctrl-c
+ */
 int file_loop(bool flg_verbose, char *file_name) {
 	FILE* ptr_file = fopen(file_name, "r");
 
@@ -100,10 +125,14 @@ int file_loop(bool flg_verbose, char *file_name) {
 	int sleep_time =0, pattern=0;
 	int c;
 	while ((c = fscanf(ptr_file, "0x%x %d\n", &pattern, &sleep_time)) == 2) {
-		write_pattern(flg_verbose, pattern, sleep_time);
+		if (write_pattern(flg_verbose, pattern, sleep_time) != 0) {
+			return 1;
+		}
 	}
 	fclose(ptr_file);
-	write_address(HPS_LED_CONTROL, 0);
+	if (write_address(HPS_LED_CONTROL, pattern) != 0) {
+		return 1;
+	}
 
 	return 0;
 }
@@ -129,7 +158,10 @@ void interrupt_handler() {
  * @argc: Total number of arguments.
  * @argv: Input arguments to program call.
  * 
- * Loops through input pattern calling write_address based on the arguments.
+ * Loops through input pattern calling write_address based on the arguments. Enables software
+ * control, then parses current pair of pattern and time, before calling write_address. 
+ * Increments i, and resets it to the start position if the argument length is exceeded.
+ * Loops indefinitely, until interrupt_triggered is set, which occurs on a control-c keystroke.
  * 
  * Return: 0 if completed successfully, 1 if error occurred.
  * 
@@ -170,7 +202,7 @@ int pattern_loop(bool flg_verbose, int pattern_start, int argc, char **argv) {
  */
 int write_pattern(bool flg_verbose, int pattern, int sleep_time) {
 	if (flg_verbose) {
-		printf("LED pattern = %8b Display time = %d ms", pattern, sleep_time);
+		printf("LED pattern = %08b Display time = %d ms\n", pattern, sleep_time);
 
 	}
 	if (write_address(HPS_LED_CONTROL, 1) != 0) {
