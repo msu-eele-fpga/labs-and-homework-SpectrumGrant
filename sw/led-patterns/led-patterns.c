@@ -93,12 +93,15 @@ int main(int argc, char **argv) {
  * Outputs user help information
  */
 void help() {
-	fprintf(stderr, "Usage: led-patterns [-hv][-f FILEPATH][-p PATTERN00 DURATION00 PATTERN01 DURATION01...]\n");
-	fprintf(stderr, "\nOptions:\n");
-	fprintf(stderr, "\t-h                     Show help information and exit.\n");
-	fprintf(stderr, "\t-v                     Print additional information with file and pattern commands.\n");
-	fprintf(stderr, "\t-f FILEPATH            Read file and display patterns listed.\n");
-	fprintf(stderr, "\t-p PATTERN DURATION    Cycle continuously through pattern duration pairs. Any number of inputs.\n");
+	fprintf(stderr, "usage: led-patterns [-h] [-v] [-f F | -p P [P ...]]\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "Runs through a sequential series of led outputs paired with durations. Accepts both file and command line patern inputs.\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "Options:\n");
+	fprintf(stderr, "\t-h              show this help message and exit.\n");
+	fprintf(stderr, "\t-v              print additional information with file and pattern commands.\n");
+	fprintf(stderr, "\t-f F            read file and display patterns listed.\n");
+	fprintf(stderr, "\t-p P [P ...]    cycle continuously through pattern duration pairs. any even number of inputs seperated by spaces.\n");
 }	
 
 /**
