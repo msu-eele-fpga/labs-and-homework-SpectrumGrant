@@ -30,15 +30,25 @@ architecture PWM_Controller_arch of PWM_Controller is
 	
 begin
 
+
 	modulator : process(clk, rst)
 	begin
+
 		if (rst = '1') then
 			PWM_output <= '1';
-			period_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * period, 8)) - 1;
-			high_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * duty_cycle, 22)) - 1;
+			period_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * period, 7)) - 1;
+			if (duty_cycle > "1000000000000000000000") then
+				high_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * period, 7)) - 1;
+			else
+				high_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32)* period * duty_cycle, 28)) - 1;
+			end if;
 		elsif (rising_edge(clk) and period_counter = 0) then
-			period_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * period, 8)) - 1;
-			high_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * duty_cycle, 22)) - 1;
+			period_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * period, 7)) - 1;
+			if (duty_cycle > "1000000000000000000000") then
+				high_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32) * period, 7)) - 1;
+			else
+				high_counter <= to_integer(shift_right(to_unsigned(system_clock_frequency, 32)* period * duty_cycle, 28)) - 1;
+			end if;
 			PWM_output <= '1';
 		elsif (rising_edge(clk) and high_counter > 0) then
 			period_counter <= period_counter - 1;
