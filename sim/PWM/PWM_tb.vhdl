@@ -20,7 +20,7 @@ end entity PWM_tb;
 
 
 architecture PWM_tb_arch of PWM_tb is
-constant CLK_PERIOD 		: time := 20 ms;
+constant CLK_PERIOD 		: time := 1 ms;
 constant W_DUTY_CYCLE	: integer := 22; -- 22.21;
 constant W_PERIOD			: integer := 13;  -- 13.7
 
@@ -41,7 +41,7 @@ begin
 
 	duv : entity work.PWM_Controller
 		generic map (
-			CLK_PERIOD => 10 ms
+			CLK_PERIOD => 1 ms
 		)
 		port map (
 			clk					=> clk_tb,
@@ -55,8 +55,16 @@ begin
 	begin
 		rst_tb <= '1', '0' after 1 ms;
 --		push_button_tb <= '0';
-		wait for 20000 ms;
-
+		period_tb <= "0000011000000"; -- 1.5s
+		duty_cycle_tb <= "0010000000000000000000"; -- 25%
+		wait for 10000 ms;
+		period_tb <= "0000000001000"; -- 62.5ms
+		duty_cycle_tb <= "0010100000000000000000"; -- 31.5%
+		wait for 10000 ms;
+		period_tb <= "0000000100000"; -- 0.25s
+		duty_cycle_tb <= "1110000000000000000000"; -- 175%
+		wait for 10000 ms;
+	
 		std.env.finish;
 	end process stimuli_generator;
 		
