@@ -245,9 +245,6 @@ architecture DE10Nano_arch of DE10_Top_Level is
 			hps_io_hps_io_gpio_inst_gpio53  : inout std_logic;
 			hps_io_hps_io_gpio_inst_gpio54  : inout std_logic;
 			hps_io_hps_io_gpio_inst_gpio61  : inout std_logic;
-			led_patterns_push_button        : in    std_logic                     := 'X';             -- push_button
-			led_patterns_switches           : in    std_logic_vector(3 downto 0)  := (others => 'X'); -- switches
-			led_patterns_led                : out   std_logic_vector(7 downto 0);                     -- led
 			memory_mem_a                    : out   std_logic_vector(14 downto 0);
 			memory_mem_ba                   : out   std_logic_vector(2 downto 0);
 			memory_mem_ck                   : out   std_logic;
@@ -265,62 +262,13 @@ architecture DE10Nano_arch of DE10_Top_Level is
 			memory_mem_dm                   : out   std_logic_vector(3 downto 0);
 			memory_oct_rzqin                : in    std_logic;
 			clk_clk                         : in    std_logic;
-			reset_reset_n                   : in    std_logic
+			reset_reset_n                   : in    std_logic;
+			pwm_controller_gpio             : out    std_logic                     := 'X'              -- gpio
 		);
 	end component soc_system;
-	
-component PWM_Controller is 
-	generic (
-		CLK_PERIOD		: time := 20 ns;
-		W_DUTY_CYCLE	: integer := 22; -- 22.21;
-		W_PERIOD			: integer := 13  -- 13.7
-	);
-	port (
-		clk			: in	std_logic;
-		rst			: in	std_logic;
-		-- PWM repitition period in milliseconds;
-		-- datatype (W.F) is individually assigned
-		period		: in	unsigned(W_PERIOD - 1 downto 0);
-		-- PWM duty cycle between [0 1]; out-of-range values are hard-limited
-		-- datatype (W.F) is individually assigned
-		duty_cycle	: in	unsigned(W_DUTY_CYCLE - 1 DOWNTO 0);
-		output		: out	std_logic
-	);
-
-end component PWM_Controller;
-
 
 	
 begin
---	PWM_CONTROLLER : led_patterns_avalon
---	generic map (
---		system_clock_period => 20 ns
---	)
---	port map (
---		clk => fpga_clk1_50,
---		rst => not push_button_n(0),
-----		avs_read
-----		avs_write
-----		avs_address
-----		avs_readdata
-----		avs_writedata
---		push_button => not push_button_n(1),
---		switches => sw,
---		led => led
---	);
-
-	PWM : component PWM_Controller
-	port map (
-		clk			=> fpga_clk1_50,
-		rst			=> "not"(push_button_n(0)),
-		-- PWM repitition period in milliseconds;
-		-- datatype (W.F) is individually assigned
-		period		=> "0000010000000",
-		-- PWM duty cycle between [0 1]; out-of-range values are hard-limited
-		-- datatype (W.F) is individually assigned
-		duty_cycle	=> "01000000000000000000000",
-		output		=> led(0)
-	);
 
 	u0 : component soc_system
 		port map (
@@ -385,11 +333,7 @@ begin
 			-- HPS user I/O
 			hps_io_hps_io_gpio_inst_gpio53 => hps_led,
 			hps_io_hps_io_gpio_inst_gpio54 => hps_key,
-			
-			-- LED Patterns connections
-			led_patterns_push_button	=> std_logic(push_button_n(1)),
-			led_patterns_switches		=> std_logic_vector(sw),
-			std_ulogic_vector(led_patterns_led)				=> led,		
+				
 			
 			-- DDR3
 			memory_mem_a       => hps_ddr3_addr,
@@ -410,7 +354,8 @@ begin
 			memory_oct_rzqin   => hps_ddr3_rzq,
 	
 			clk_clk       => fpga_clk1_50,
-			reset_reset_n => push_button_n(0) -- note that reset_reset_n is *active-low*
+			reset_reset_n => push_button_n(0), -- note that reset_reset_n is *active-low*
+			pwm_controller_gpio => gpio_0(0)              -- pwm_controller.gpio
 		);
 
 end architecture DE10Nano_arch;

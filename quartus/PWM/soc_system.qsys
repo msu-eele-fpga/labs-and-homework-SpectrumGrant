@@ -9,11 +9,11 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element HPS_LED_patterns_0
+   element PWM_Controller_avalon_0
    {
       datum _sortIndex
       {
-         value = "2";
+         value = "3";
          type = "int";
       }
    }
@@ -42,7 +42,7 @@
    {
       datum _sortIndex
       {
-         value = "3";
+         value = "2";
          type = "int";
       }
    }
@@ -324,7 +324,7 @@
  <parameter name="hideFromIPCatalog" value="false" />
  <parameter name="lockedInterfaceDefinition" value="" />
  <parameter name="maxAdditionalLatency" value="1" />
- <parameter name="projectName" value="LED_Patterns.qpf" />
+ <parameter name="projectName" value="PWM.qpf" />
  <parameter name="sopcBorderPoints" value="false" />
  <parameter name="systemHash" value="0" />
  <parameter name="testBenchDutName" value="" />
@@ -338,16 +338,16 @@
  <interface name="hps_io" internal="hps.hps_io" type="conduit" dir="end" />
  <interface name="hps_spim0" internal="hps.spim0" />
  <interface name="hps_spim0_sclk_out" internal="hps.spim0_sclk_out" />
+ <interface name="memory" internal="hps.memory" type="conduit" dir="end" />
  <interface
-   name="led_patterns"
-   internal="HPS_LED_patterns_0.export"
+   name="pwm_controller"
+   internal="PWM_Controller_avalon_0.export"
    type="conduit"
    dir="end" />
- <interface name="memory" internal="hps.memory" type="conduit" dir="end" />
  <interface name="reset" internal="fpga_clk.clk_in_reset" type="reset" dir="end" />
  <module
-   name="HPS_LED_patterns_0"
-   kind="HPS_LED_patterns"
+   name="PWM_Controller_avalon_0"
+   kind="PWM_Controller_avalon"
    version="1.0"
    enabled="1" />
  <module name="fpga_clk" kind="clock_source" version="23.1" enabled="1">
@@ -904,26 +904,17 @@
    kind="avalon"
    version="23.1"
    start="hps.h2f_lw_axi_master"
-   end="HPS_LED_patterns_0.avalon_slave_0">
+   end="PWM_Controller_avalon_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
- <connection
-   kind="avalon"
-   version="23.1"
-   start="jtag_mm1.master"
-   end="HPS_LED_patterns_0.avalon_slave_0">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
+ <connection kind="clock" version="23.1" start="fpga_clk.clk" end="jtag_mm1.clk" />
  <connection
    kind="clock"
    version="23.1"
    start="fpga_clk.clk"
-   end="HPS_LED_patterns_0.clk" />
- <connection kind="clock" version="23.1" start="fpga_clk.clk" end="jtag_mm1.clk" />
+   end="PWM_Controller_avalon_0.clk" />
  <connection
    kind="clock"
    version="23.1"
@@ -938,7 +929,7 @@
    kind="reset"
    version="23.1"
    start="fpga_clk.clk_reset"
-   end="HPS_LED_patterns_0.rst" />
+   end="PWM_Controller_avalon_0.rst" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
 </system>

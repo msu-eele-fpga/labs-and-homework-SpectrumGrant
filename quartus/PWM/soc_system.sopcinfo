@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EnsembleReport name="soc_system" kind="soc_system" version="1.0" fabric="QSYS">
  <!-- Format version 23.1 993 (Future versions may contain additional information.) -->
- <!-- 2024.11.08.15:27:17 -->
+ <!-- 2024.12.07.17:10:42 -->
  <!-- A collection of modules and connections -->
  <parameter name="AUTO_GENERATION_ID">
   <type>java.lang.Integer</type>
-  <value>1731104835</value>
+  <value>1733616641</value>
   <derived>false</derived>
   <enabled>true</enabled>
   <visible>false</visible>
@@ -96,10 +96,10 @@
   <valid>true</valid>
  </parameter>
  <module
-   name="HPS_LED_patterns_0"
-   kind="HPS_LED_patterns"
+   name="PWM_Controller_avalon_0"
+   kind="PWM_Controller_avalon"
    version="1.0"
-   path="HPS_LED_patterns_0">
+   path="PWM_Controller_avalon_0">
   <!-- Describes a single module. Module parameters are
 the requested settings for a module instance. -->
   <parameter name="deviceFamily">
@@ -483,7 +483,7 @@ parameters are a RESULT of the module parameters. -->
     <role>writedata</role>
    </port>
   </interface>
-  <interface name="export" kind="conduit_end" version="23.1">
+  <interface name="rst" kind="reset_sink" version="23.1">
    <!-- The connection points exposed by a module instance for the
 particular module parameters. Connection points and their
 parameters are a RESULT of the module parameters. -->
@@ -495,9 +495,9 @@ parameters are a RESULT of the module parameters. -->
     <visible>true</visible>
     <valid>true</valid>
    </parameter>
-   <parameter name="associatedReset">
-    <type>java.lang.String</type>
-    <value></value>
+   <parameter name="synchronousEdges">
+    <type>com.altera.sopcmodel.reset.Reset$Edges</type>
+    <value>DEASSERT</value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -519,25 +519,13 @@ parameters are a RESULT of the module parameters. -->
     <visible>true</visible>
     <valid>true</valid>
    </parameter>
-   <type>conduit</type>
+   <type>reset</type>
    <isStart>false</isStart>
    <port>
-    <name>push_button</name>
+    <name>rst</name>
     <direction>Input</direction>
     <width>1</width>
-    <role>push_button</role>
-   </port>
-   <port>
-    <name>switches</name>
-    <direction>Input</direction>
-    <width>4</width>
-    <role>switches</role>
-   </port>
-   <port>
-    <name>led</name>
-    <direction>Output</direction>
-    <width>8</width>
-    <role>led</role>
+    <role>reset</role>
    </port>
   </interface>
   <interface name="clk" kind="clock_sink" version="23.1">
@@ -585,7 +573,7 @@ parameters are a RESULT of the module parameters. -->
     <role>clk</role>
    </port>
   </interface>
-  <interface name="rst" kind="reset_sink" version="23.1">
+  <interface name="export" kind="conduit_end" version="23.1">
    <!-- The connection points exposed by a module instance for the
 particular module parameters. Connection points and their
 parameters are a RESULT of the module parameters. -->
@@ -597,9 +585,9 @@ parameters are a RESULT of the module parameters. -->
     <visible>true</visible>
     <valid>true</valid>
    </parameter>
-   <parameter name="synchronousEdges">
-    <type>com.altera.sopcmodel.reset.Reset$Edges</type>
-    <value>DEASSERT</value>
+   <parameter name="associatedReset">
+    <type>java.lang.String</type>
+    <value></value>
     <derived>false</derived>
     <enabled>true</enabled>
     <visible>true</visible>
@@ -621,13 +609,13 @@ parameters are a RESULT of the module parameters. -->
     <visible>true</visible>
     <valid>true</valid>
    </parameter>
-   <type>reset</type>
+   <type>conduit</type>
    <isStart>false</isStart>
    <port>
-    <name>rst</name>
-    <direction>Input</direction>
+    <name>gpio</name>
+    <direction>Output</direction>
     <width>1</width>
-    <role>reset</role>
+    <role>gpio</role>
    </port>
   </interface>
  </module>
@@ -868,15 +856,15 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <clockDomainMember>
     <isBridge>false</isBridge>
-    <moduleName>HPS_LED_patterns_0</moduleName>
-    <slaveName>clk</slaveName>
-    <name>HPS_LED_patterns_0.clk</name>
-   </clockDomainMember>
-   <clockDomainMember>
-    <isBridge>false</isBridge>
     <moduleName>jtag_mm1</moduleName>
     <slaveName>clk</slaveName>
     <name>jtag_mm1.clk</name>
+   </clockDomainMember>
+   <clockDomainMember>
+    <isBridge>false</isBridge>
+    <moduleName>PWM_Controller_avalon_0</moduleName>
+    <slaveName>clk</slaveName>
+    <name>PWM_Controller_avalon_0.clk</name>
    </clockDomainMember>
    <clockDomainMember>
     <isBridge>false</isBridge>
@@ -16533,9 +16521,9 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>HPS_LED_patterns_0</moduleName>
+    <moduleName>PWM_Controller_avalon_0</moduleName>
     <slaveName>avalon_slave_0</slaveName>
-    <name>HPS_LED_patterns_0.avalon_slave_0</name>
+    <name>PWM_Controller_avalon_0.avalon_slave_0</name>
     <baseAddress>0</baseAddress>
     <span>16</span>
    </memoryBlock>
@@ -42363,9 +42351,9 @@ parameters are a RESULT of the module parameters. -->
    </port>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>HPS_LED_patterns_0</moduleName>
+    <moduleName>PWM_Controller_avalon_0</moduleName>
     <slaveName>avalon_slave_0</slaveName>
-    <name>HPS_LED_patterns_0.avalon_slave_0</name>
+    <name>PWM_Controller_avalon_0.avalon_slave_0</name>
     <baseAddress>0</baseAddress>
     <span>16</span>
    </memoryBlock>
@@ -43478,9 +43466,9 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>HPS_LED_patterns_0</moduleName>
+    <moduleName>PWM_Controller_avalon_0</moduleName>
     <slaveName>avalon_slave_0</slaveName>
-    <name>HPS_LED_patterns_0.avalon_slave_0</name>
+    <name>PWM_Controller_avalon_0.avalon_slave_0</name>
     <baseAddress>4280287232</baseAddress>
     <span>16</span>
    </memoryBlock>
@@ -44297,9 +44285,9 @@ parameters are a RESULT of the module parameters. -->
    </memoryBlock>
    <memoryBlock>
     <isBridge>false</isBridge>
-    <moduleName>HPS_LED_patterns_0</moduleName>
+    <moduleName>PWM_Controller_avalon_0</moduleName>
     <slaveName>avalon_slave_0</slaveName>
-    <name>HPS_LED_patterns_0.avalon_slave_0</name>
+    <name>PWM_Controller_avalon_0.avalon_slave_0</name>
     <baseAddress>4280287232</baseAddress>
     <span>16</span>
    </memoryBlock>
@@ -72371,14 +72359,6 @@ parameters are a RESULT of the module parameters. -->
     <width>4</width>
     <role>byteenable</role>
    </port>
-   <memoryBlock>
-    <isBridge>false</isBridge>
-    <moduleName>HPS_LED_patterns_0</moduleName>
-    <slaveName>avalon_slave_0</slaveName>
-    <name>HPS_LED_patterns_0.avalon_slave_0</name>
-    <baseAddress>0</baseAddress>
-    <span>16</span>
-   </memoryBlock>
   </interface>
   <interface name="master_reset" kind="reset_source" version="23.1">
    <!-- The connection points exposed by a module instance for the
@@ -80427,11 +80407,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>interrupt_sender</endConnectionPoint>
  </connection>
  <connection
-   name="hps_bridges.h2f_lw/HPS_LED_patterns_0.avalon_slave_0"
+   name="hps_bridges.h2f_lw/PWM_Controller_avalon_0.avalon_slave_0"
    kind="avalon"
    version="23.1"
    start="hps_bridges.h2f_lw"
-   end="HPS_LED_patterns_0.avalon_slave_0">
+   end="PWM_Controller_avalon_0.avalon_slave_0">
   <parameter name="arbitrationPriority">
    <type>int</type>
    <value>1</value>
@@ -80474,86 +80454,8 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>hps_bridges</startModule>
   <startConnectionPoint>h2f_lw</startConnectionPoint>
-  <endModule>HPS_LED_patterns_0</endModule>
+  <endModule>PWM_Controller_avalon_0</endModule>
   <endConnectionPoint>avalon_slave_0</endConnectionPoint>
- </connection>
- <connection
-   name="jtag_mm1.master/HPS_LED_patterns_0.avalon_slave_0"
-   kind="avalon"
-   version="23.1"
-   start="jtag_mm1.master"
-   end="HPS_LED_patterns_0.avalon_slave_0">
-  <parameter name="arbitrationPriority">
-   <type>int</type>
-   <value>1</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <parameter name="baseAddress">
-   <type>java.math.BigInteger</type>
-   <value>0x0000</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <parameter name="defaultConnection">
-   <type>boolean</type>
-   <value>false</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <parameter name="deviceFamily">
-   <type>java.lang.String</type>
-   <value>UNKNOWN</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <parameter name="generateLegacySim">
-   <type>boolean</type>
-   <value>false</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <startModule>jtag_mm1</startModule>
-  <startConnectionPoint>master</startConnectionPoint>
-  <endModule>HPS_LED_patterns_0</endModule>
-  <endConnectionPoint>avalon_slave_0</endConnectionPoint>
- </connection>
- <connection
-   name="fpga_clk.clk/HPS_LED_patterns_0.clk"
-   kind="clock"
-   version="23.1"
-   start="fpga_clk.clk"
-   end="HPS_LED_patterns_0.clk">
-  <parameter name="deviceFamily">
-   <type>java.lang.String</type>
-   <value>UNKNOWN</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <parameter name="generateLegacySim">
-   <type>boolean</type>
-   <value>false</value>
-   <derived>false</derived>
-   <enabled>true</enabled>
-   <visible>true</visible>
-   <valid>true</valid>
-  </parameter>
-  <startModule>fpga_clk</startModule>
-  <startConnectionPoint>clk</startConnectionPoint>
-  <endModule>HPS_LED_patterns_0</endModule>
-  <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
    name="fpga_clk.clk/jtag_mm1.clk"
@@ -80580,6 +80482,33 @@ parameters are a RESULT of the module parameters. -->
   <startModule>fpga_clk</startModule>
   <startConnectionPoint>clk</startConnectionPoint>
   <endModule>jtag_mm1</endModule>
+  <endConnectionPoint>clk</endConnectionPoint>
+ </connection>
+ <connection
+   name="fpga_clk.clk/PWM_Controller_avalon_0.clk"
+   kind="clock"
+   version="23.1"
+   start="fpga_clk.clk"
+   end="PWM_Controller_avalon_0.clk">
+  <parameter name="deviceFamily">
+   <type>java.lang.String</type>
+   <value>UNKNOWN</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <parameter name="generateLegacySim">
+   <type>boolean</type>
+   <value>false</value>
+   <derived>false</derived>
+   <enabled>true</enabled>
+   <visible>true</visible>
+   <valid>true</valid>
+  </parameter>
+  <startModule>fpga_clk</startModule>
+  <startConnectionPoint>clk</startConnectionPoint>
+  <endModule>PWM_Controller_avalon_0</endModule>
   <endConnectionPoint>clk</endConnectionPoint>
  </connection>
  <connection
@@ -80637,11 +80566,11 @@ parameters are a RESULT of the module parameters. -->
   <endConnectionPoint>clk_reset</endConnectionPoint>
  </connection>
  <connection
-   name="fpga_clk.clk_reset/HPS_LED_patterns_0.rst"
+   name="fpga_clk.clk_reset/PWM_Controller_avalon_0.rst"
    kind="reset"
    version="23.1"
    start="fpga_clk.clk_reset"
-   end="HPS_LED_patterns_0.rst">
+   end="PWM_Controller_avalon_0.rst">
   <parameter name="deviceFamily">
    <type>java.lang.String</type>
    <value>UNKNOWN</value>
@@ -80660,15 +80589,15 @@ parameters are a RESULT of the module parameters. -->
   </parameter>
   <startModule>fpga_clk</startModule>
   <startConnectionPoint>clk_reset</startConnectionPoint>
-  <endModule>HPS_LED_patterns_0</endModule>
+  <endModule>PWM_Controller_avalon_0</endModule>
   <endConnectionPoint>rst</endConnectionPoint>
  </connection>
  <plugin>
   <instanceCount>1</instanceCount>
-  <name>HPS_LED_patterns</name>
+  <name>PWM_Controller_avalon</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IModule</subtype>
-  <displayName>HPS_LED_patterns</displayName>
+  <displayName>PWM_Controller_avalon</displayName>
   <version>1.0</version>
  </plugin>
  <plugin>
@@ -80680,11 +80609,11 @@ parameters are a RESULT of the module parameters. -->
   <version>23.1</version>
  </plugin>
  <plugin>
-  <instanceCount>5</instanceCount>
-  <name>conduit_end</name>
+  <instanceCount>44</instanceCount>
+  <name>reset_sink</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IMutableConnectionPoint</subtype>
-  <displayName>Conduit</displayName>
+  <displayName>Reset Input</displayName>
   <version>23.1</version>
  </plugin>
  <plugin>
@@ -80696,11 +80625,11 @@ parameters are a RESULT of the module parameters. -->
   <version>23.1</version>
  </plugin>
  <plugin>
-  <instanceCount>44</instanceCount>
-  <name>reset_sink</name>
+  <instanceCount>5</instanceCount>
+  <name>conduit_end</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IMutableConnectionPoint</subtype>
-  <displayName>Reset Input</displayName>
+  <displayName>Conduit</displayName>
   <version>23.1</version>
  </plugin>
  <plugin>
@@ -81088,7 +81017,7 @@ parameters are a RESULT of the module parameters. -->
   <version>23.1</version>
  </plugin>
  <plugin>
-  <instanceCount>90</instanceCount>
+  <instanceCount>89</instanceCount>
   <name>avalon</name>
   <type>com.altera.entityinterfaces.IElementClass</type>
   <subtype>com.altera.entityinterfaces.IConnection</subtype>
