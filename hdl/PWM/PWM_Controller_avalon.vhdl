@@ -55,9 +55,9 @@ begin
 	
 	CMP_PWM : PWM_Controller
 	generic map (
-		CLK_PERIOD => clk_period,
-		W_DUTY_CYCLE => duty_cycle_width,
-		W_PERIOD => period_width
+		CLK_PERIOD => 20 ns,
+		W_DUTY_CYCLE => 22,
+		W_PERIOD => 13
 	)
 	port map (
 		clk => clk,
