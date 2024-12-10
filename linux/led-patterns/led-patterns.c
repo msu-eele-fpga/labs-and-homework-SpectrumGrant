@@ -2,14 +2,23 @@
 #include <linux/platform_device.h>
 #include <linux/mod_devicetable.h>
 #include <linux/io.h>
+#include <linux/mutex.h> // mutex definitions
+#include <linux/miscdevice.h> // miscdevice definitions
+#include <linux/types.h> // data types like u32, u16, etc.
+#include <linux/fs.h> // copy_to_user, etc
 
 #define HPS_LED_CONTROL_OFFSET 0
 #define BASE_PERIOD_OFFSET 4
 #define LED_REG_OFFSET 8
+#define SPAN 16
 
+static struct platform_driver led_patterns_driver;
 static const struct of_device_id led_patterns_of_match[];
+static const struct file_operations led_patterns_fop;
 static int led_patterns_probe(struct platform_device *pdev);
 static int led_patterns_remove(struct platform_device *pdev);
+static ssize_t led_patterns_read(struct file *file, char __user *buf, size_t count, loff_t *offset);
+static ssize_t led_patterns_write(struct file *file, const char __user *buf, size_t count, loff_t *offset);
 
 /*struct platform_driver {
 	int (*probe)(struct platform_device *);
@@ -31,6 +40,8 @@ struct led_patterns_dev {
 	void __iomem *hps_led_control;
 	void __iomem *base_period;
 	void __iomem *led_reg;
+	struct miscdevice miscdev;
+	struct mutex lock;
 };
 
 /**
@@ -51,11 +62,23 @@ static struct platform_driver led_patterns_driver = {
 	},
 };
 
-module_platform_driver(led_patterns_driver);
-
-MODULE_LICENSE("Dual MIT/GPL");
-MODULE_AUTHOR("Grant Kirkland");
-MODULE_DESCRIPTION("led_patterns driver");
+/**
+ * led_patterns_fops - File operations supported by the led_patterns driver
+ *
+ * @owner: The led_patterns driver owns the file operations; this
+ * ensures that the driver can't be removed while the character
+ * device is still in use.
+ * @read: The read function.
+ * @write: The write function
+ * @llseek: We use the kernel's default_llseek() function; this allows
+ * users to change what position they are writing/reading to/from.
+ */
+ static const struct file_operations led_patterns_fops = {
+	.owner = THIS_MODULE,
+	.read = led_patterns_read,
+	.write = led_patterns_write,
+	.llseek = default_llseek,
+ };
 
 /**
  * led_patterns_probe() - Initialize device when a match is found
@@ -69,6 +92,7 @@ MODULE_DESCRIPTION("led_patterns driver");
  */
 static int led_patterns_probe(struct platform_device *pdev) {
 	struct led_patterns_dev *priv;
+	size_t ret;
 
 	/*
 	 * Allocate kernel memory for the led patterns device and set it to 0.
@@ -106,7 +130,20 @@ static int led_patterns_probe(struct platform_device *pdev) {
 	iowrite32(1, priv->hps_led_control);
 	iowrite32(0xff, priv->led_reg);
 
-	/* Attatch the led pattern's private data to the platform device's struct.
+	// Initialize the misc device paramters
+	priv->miscdev.minor = MISC_DYNAMIC_MINOR;
+	priv->miscdev.name = "led_patterns";
+	priv->miscdev.fops = &led_patterns_fops;
+	priv->miscdev.parent = &pdev->dev;
+
+	// Register the misc device; this creates a char dev at /dev/led_patterns
+	ret = misc_register(&priv->miscdev);
+	if (ret) {
+		pr_err("Failed to register misc device");
+		return ret;
+	}
+
+	/* Attach the led pattern's private data to the platform device's struct.
 	 * This is so we can access our state container in the other functions.
 	 */
 	platform_set_drvdata(pdev, priv);
@@ -130,10 +167,116 @@ static int led_patterns_remove(struct platform_device *pdev) {
 	// Disable software-control mode, just for kicks.
 	iowrite32(0, priv->hps_led_control);
 
+	// Deregister the misc device and remove the /dev/led_patterns file.
+	misc_deregister(&priv->miscdev);
+
 	pr_info("led_patterns_remove successful\n");
 
 	return 0;
 }
+
+/**
+ * led_patterns_read() - Read method for the led_patterns char device
+ * @file: Pointer to the char device file struct.
+ * @buf: User-space buffer to read the value into.
+ * @count: The number of bytes being requested.
+ * @offset: The byte offset in the file being read from.
+ * 
+ * Return: On success, the number of bytes written is returned and the
+ * offset @offset is advanced by this number. On error, a negative error
+ * value is returned.
+ */
+ static ssize_t led_patterns_read(struct file *file, char __user *buf, size_t count, loff_t *offset) {
+	size_t ret;
+	u32 val;
+
+	/* Get the device's private data from the file struct's private_data field.
+	 * The private_data field is equal to the miscdev field in the led_patterns_dev
+	 * struct. container_of returns the led_patterns_dev struct that contains the 
+	 * miscdev in private_data. 
+	 */
+	 struct led_patterns_dev *priv = container_of(file->private_data, struct led_patterns_dev, miscdev);
+	 
+	 // Check the file offset to make sure we are reading from a valid location.
+	 if (*offset < 0) {
+		// We can't read from a negative file position.
+		return -EINVAL;
+	 }
+	 if (*offset >= SPAN) {
+		// We can't read from a position past the end of our device.
+		return 0;
+	 }
+	 if ((*offset % 0x4) != 0) {
+		// Prevent unaligned access.
+		pr_warn("led_patterns_read: unaligned access\n");
+		return -EFAULT;
+	 }
+
+	 val = ioread32(priv->base_addr + *offset);
+
+	 // Copy the value to userspace.
+	 ret = copy_to_user(buf, &val, sizeof(val));
+	 if (ret == sizeof(val)) {
+		pr_warn("led_patterns_read: nothing copied\n");
+		return -EFAULT;
+	 }
+
+	 // Increment the file offset by the number of bytes we read.
+	 *offset = *offset + sizeof(val);
+	 
+	 return sizeof(val);
+ }
+
+/**
+ * led_patterns_write() - Write method for the led_patterns char device
+ * @file: Pointer to the char device file struct.
+ * @buf: User-space buffer to read the value from.
+ * @count: The number of bytes being written.
+ * @offset: The byte offset in the file being written to.
+ *
+ * Return: On success, the number of bytes written is returned and the
+ * offset @offset is advanced by this number. On error, a negative error
+ * value is returned.
+ */
+static ssize_t led_patterns_write(struct file *file, const char __user *buf, size_t count, loff_t *offset) {
+	size_t ret;
+	u32 val;
+
+	struct led_patterns_dev *priv = container_of(file->private_data, struct led_patterns_dev, miscdev);
+
+	if (*offset < 0) {
+		return -EINVAL;
+	}
+	if (*offset >= SPAN) {
+		return 0;
+	}
+	if ((*offset % 0x4) != 0) {
+		pr_warn("led_patterns_write: unaligned access\n");
+		return -EFAULT;
+	}
+
+	mutex_lock(&priv->lock);
+
+	// Get the value from userspace.
+	ret = copy_from_user(&val, buf, sizeof(val));
+	if (ret != sizeof(val)) {
+		iowrite32(val, priv->base_addr + *offset);
+
+		// Increment the file offset by the number of bytes we wrote.
+		*offset = *offset + sizeof(val);
+
+		// Return the number of bytes we wrote.
+		ret = sizeof(val);
+	} else {
+		pr_warn("led_patterns_write: nothing copied from user space\n");
+		ret = -EFAULT;
+	}
+
+	mutex_unlock(&priv->lock);
+	
+	return ret;
+}
+
 
 /**
  * Define the compatible property used for matching devices to this driver,
@@ -145,4 +288,10 @@ static const struct of_device_id led_patterns_of_match[] = {
 	{ .compatible = "Kirkland,led_patterns", },
 	{ }	
 };
+
+
+module_platform_driver(led_patterns_driver);
 MODULE_DEVICE_TABLE(of, led_patterns_of_match);
+MODULE_LICENSE("Dual MIT/GPL");
+MODULE_AUTHOR("Grant Kirkland");
+MODULE_DESCRIPTION("led_patterns driver");
