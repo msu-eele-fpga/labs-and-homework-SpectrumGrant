@@ -17,6 +17,6 @@ static void __exit cleanup_function(void) {
 	pr_info("Goodbye, cruel world\n");
 }
 
-MODULE_LICENSE();
+MODULE_LICENSE("Dual MIT/GPL");
 MODULE_AUTHOR("Grant Kirkland");
 MODULE_DESCRIPTION("A simple hello world kernel module");
