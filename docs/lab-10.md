@@ -6,7 +6,10 @@ This lab involved modifying a device tree file to setup a heartbeat LED on the D
 
 ## Demo
 
+show heartbeat runs on boot
+
 cd /sys/class/leds/green\:heartbeat/
+
 echo cpu > trigger
 
 
