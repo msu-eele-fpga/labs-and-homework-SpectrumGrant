@@ -17,6 +17,14 @@
          type = "int";
       }
    }
+   element PWM_Controller_avalon_0.avalon_slave_0
+   {
+      datum baseAddress
+      {
+         value = "1304336";
+         type = "String";
+      }
+   }
    element fpga_clk
    {
       datum _sortIndex
@@ -43,6 +51,14 @@
       datum _sortIndex
       {
          value = "2";
+         type = "int";
+      }
+   }
+   element jtag_mm1_0
+   {
+      datum _sortIndex
+      {
+         value = "4";
          type = "int";
       }
    }
@@ -900,13 +916,36 @@
   <parameter name="PLI_PORT" value="50000" />
   <parameter name="USE_PLI" value="0" />
  </module>
+ <module
+   name="jtag_mm1_0"
+   kind="altera_jtag_avalon_master"
+   version="23.1"
+   enabled="1">
+  <parameter name="AUTO_DEVICE" value="5CSEBA6U23I7" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="7" />
+  <parameter name="COMPONENT_CLOCK" value="0" />
+  <parameter name="FAST_VER" value="0" />
+  <parameter name="FIFO_DEPTHS" value="2" />
+  <parameter name="PLI_PORT" value="50000" />
+  <parameter name="USE_PLI" value="0" />
+ </module>
  <connection
    kind="avalon"
    version="23.1"
    start="hps.h2f_lw_axi_master"
    end="PWM_Controller_avalon_0.avalon_slave_0">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="baseAddress" value="0x0013e710" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="23.1"
+   start="jtag_mm1_0.master"
+   end="PWM_Controller_avalon_0.avalon_slave_0">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0013e710" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection kind="clock" version="23.1" start="fpga_clk.clk" end="jtag_mm1.clk" />
@@ -915,6 +954,7 @@
    version="23.1"
    start="fpga_clk.clk"
    end="PWM_Controller_avalon_0.clk" />
+ <connection kind="clock" version="23.1" start="fpga_clk.clk" end="jtag_mm1_0.clk" />
  <connection
    kind="clock"
    version="23.1"
@@ -925,6 +965,11 @@
    version="23.1"
    start="fpga_clk.clk_reset"
    end="jtag_mm1.clk_reset" />
+ <connection
+   kind="reset"
+   version="23.1"
+   start="fpga_clk.clk_reset"
+   end="jtag_mm1_0.clk_reset" />
  <connection
    kind="reset"
    version="23.1"
