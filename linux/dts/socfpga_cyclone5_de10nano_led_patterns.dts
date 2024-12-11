@@ -1,5 +1,8 @@
 #include "socfpga_cyclone5_de10nano.dtsi"
 
 /{
-
+	led_patterns: led_patterns@ff200020 {
+		compatible = "Kirkland,led_patterns";
+		reg = <0xff200020 16>;
+	};
 };
