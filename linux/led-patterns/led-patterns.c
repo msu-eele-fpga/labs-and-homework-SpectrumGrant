@@ -30,6 +30,21 @@ static ssize_t base_period_show(struct device *dev, struct device_attribute *att
 static ssize_t base_period_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t size);
 static struct attribute *led_patterns_attrs[];
 
+// Define sysfs attributes
+static DEVICE_ATTR_RW(hps_led_control);
+static DEVICE_ATTR_RW(base_period);
+static DEVICE_ATTR_RW(led_reg);
+
+// Create an attribute group so the device core can
+// export the attributes for us.
+static struct attribute *led_patterns_attrs[] = {
+	&dev_attr_hps_led_control.attr,
+	&dev_attr_base_period.attr,
+	&dev_attr_led_reg.attr,
+	NULL,
+};
+ATTRIBUTE_GROUPS(led_patterns);
+
 /*struct platform_driver {
 	int (*probe)(struct platform_device *);
 	int (*remove)(struct platform_device *);
@@ -73,20 +88,6 @@ static struct platform_driver led_patterns_driver = {
 	},
 };
 
-// Define sysfs attributes
-static DEVICE_ATTR_RW(hps_led_control);
-static DEVICE_ATTR_RW(base_period);
-static DEVICE_ATTR_RW(led_reg);
-
-// Create an attribute group so the device core can
-// export the attributes for us.
-static struct attribute *led_patterns_attrs[] = {
-	&dev_attr_hps_led_control.attr,
-	&dev_attr_base_period.attr,
-	&dev_attr_led_reg.attr,
-	NULL,
-};
-ATTRIBUTE_GROUPS(led_patterns);
 
 /**
  * led_patterns_fops - File operations supported by the led_patterns driver
