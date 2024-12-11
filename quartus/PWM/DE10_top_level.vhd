@@ -263,8 +263,7 @@ architecture DE10Nano_arch of DE10_Top_Level is
 			memory_oct_rzqin                : in    std_logic;
 			clk_clk                         : in    std_logic;
 			reset_reset_n                   : in    std_logic;
-			pwm_controller_gpio             : out    std_logic                     := 'X'              -- gpio
-		);
+			pwm_controller_gpio             : out   std_logic_vector(2 downto 0));                     -- gpio		);
 	end component soc_system;
 
 	
@@ -355,7 +354,7 @@ begin
 	
 			clk_clk       => fpga_clk1_50,
 			reset_reset_n => push_button_n(0), -- note that reset_reset_n is *active-low*
-			pwm_controller_gpio => gpio_0(0)              -- pwm_controller.gpio
+			std_logic_vector(pwm_controller_gpio) => gpio_0(2 downto 0)          -- pwm_controller.gpio
 		);
 
 end architecture DE10Nano_arch;
