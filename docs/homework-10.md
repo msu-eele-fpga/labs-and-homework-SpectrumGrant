@@ -10,9 +10,8 @@ Red
 
 $$  R_1 > \frac{(3.3-2.1)}{0.02} = 60\ \Omega $$
 
-$$ 252\frac{\text{lm}}{\text{W}} * 2.1 \text{ V} * \frac{(3.3 - 2.1)}{R_1} \frac{\text{V}}{\Omega} = \frac{635}{R_1} \text{lm}$$
 
-$$ 252\frac{\text{lm}}{\text{W}} * 1.78 \text{ V} * \frac{(3.3 - 1.78)}{R_1} \frac{\text{V}}{\Omega} = \frac{681.8112}{R_1} \text{lm}$$
+$$ 252\frac{\text{lm}}{\text{W}} * 2.1 \text{ V} * \frac{(3.3 - 2.1)}{R_1} \frac{\text{V}}{\Omega} = \frac{635}{R_1} \text{lm}$$
 
 
 Green
@@ -20,7 +19,6 @@ $$  R_2 > \frac{(3.3-3.1)}{0.02} = 10\ \Omega $$
 
 
 $$ 537\frac{\text{lm}}{\text{W}} * 3.1 \text{ V} * \frac{(3.3 - 3.1)}{R_2} \frac{\text{V}}{\Omega} = \frac{332.94}{R_2}\text{lm}$$
-$$ 537\frac{\text{lm}}{\text{W}} * 2.23 \text{ V} * \frac{(3.3 - 2.23)}{R_2} \frac{\text{V}}{\Omega} = \frac{1281.3357}{R_2}\text{lm}$$
 
 
 Blue
@@ -28,18 +26,21 @@ $$  R_3 > \frac{(3.3-3.1)}{0.02} = 10\ \Omega $$
 
 
 $$ 79\frac{\text{lm}}{\text{W}} * 3.1 \text{ V} * \frac{(3.3 - 3.1)}{R_3} \frac{\text{V}}{\Omega} = \frac{48.98}{R_3}\text{lm}$$
-$$ 79\frac{\text{lm}}{\text{W}} * 2.474 \text{ V} * \frac{(3.3 - 2.474)}{R_3} \frac{\text{V}}{\Omega} = \frac{161.44}{R_3}\text{lm}$$
 
 ## Deliverables
 
-### Model Sim - Period 1.5s		Duty Cycle: 25%
-![A screenshot of a awesome working program](assets/Kirkland_Homework09_PWM01.png)
+### <span style="color:red">  LED Photo Red </span>
+![A screenshot of a awesome red led](assets/Kirkland_Homework10_Red.jpg)
 
-### Model Sim - Period 62.5ms		Duty Cycle: 31.25%
-![A screenshot of a awesome working program](assets/Kirkland_Homework09_PWM02.png)
+### <span style="color:green">  LED Photo Green </span>
+![A screenshot of a awesome green led](assets/Kirkland_Homework10_Green.jpg)
 
-### Model Sim - Period 250ms		Duty Cycle: 175%
-![A screenshot of a awesome working program](assets/Kirkland_Homework09_PWM03.png)
+### <span style="color:blue"> LED Photo Blue </span> 
+![A screenshot of a awesome blue led](assets/Kirkland_Homework10_Blue.jpg)
 
-### Oscilloscope Output - Period: 1s	Duty Cycle: 50%
-![A screenshot of a awesome working program](assets/Kirkland_Homework09_Scope.png)
+### <span style="color:#ffaaaa"> LED Photo Rosewater </span>
+![A screenshot of a awesome rosewater led](assets/Kirkland_Homework10_Rosewater.jpg)
+
+### <span style="color:#E49B0F"> LED Photo Gamboge </span>
+![A screenshot of a awesome gamboge led](assets/Kirkland_Homework10_Gamboge.jpg)
+
